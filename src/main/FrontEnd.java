@@ -7,6 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -14,13 +15,13 @@ import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.eclipse.jetty.util.ConcurrentHashSet;
 
-public class FrontEnd extends AbstractHandler implements Runnable, Abonent {
+public class FrontEnd extends HttpServlet implements Runnable, Abonent {
    
-   private static final String GAME_ADDRESS = "game";
+   public static final String PATH = "/logon";
    
    private static final String SESSION_ID_PARAM = "sessionID";
    
-   private static final String NAME_PARAM = "userName";
+   private static final String LOGIN = "login";
    
    private final MessageSystem messageSystem;
    
@@ -51,52 +52,115 @@ public class FrontEnd extends AbstractHandler implements Runnable, Abonent {
          messageSystem.execFor(this);
          TimeHelper.sleep(TimeHelper.getServerTick() );
       }
-   }
+   }  
    
-   public void handle(String target, 
-         Request baseRequest,
-	      HttpServletRequest request,
-	      HttpServletResponse response) throws IOException, ServletException {
-      
-      if (!request.getRequestURI().contains(GAME_ADDRESS) ) 
-         return;
+   @Override
+   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException,
+         IOException {
       handleCount.incrementAndGet();
-      includeServiceInfo(baseRequest, response);
-	   int sessionID = parseSessionId(request);
-	   if (sessionID == 0) {
-	      // first page
-	      Session session = new Session();
-	      // begin to create user session
-	      userSessionsInCreation.add(session);
-	      response.getWriter().print(inputNamePage(session) );
-	   }
-	   else {
-	      Session session = new Session(sessionID);
-	      String userName = request.getParameter(NAME_PARAM);
-	      if (request.getParameter(NAME_PARAM) != null) {      
-	         // if userSession creation is in process... then ask to get user from account service
-	         if (userSessionsInCreation.contains(session) ) {
-	            // wait for authentication
-	            response.getWriter().print(waitForAutentication(session, userName) );
-	            messageSystem.sendMessage(new MsgGetUser(getAddress(), messageSystem.getAddressService().getAddress(AccountService.class),
-	                  session, userName));
-	         }
-	         else {
-	            // connection established 
-	            response.getWriter().print(connectionEstablishedPage(session, sessionToUserSession.get(session).getUser() ) );
-	         }
-	      }
-	      // just save session between client and server
-	      else {
-	         response.getWriter().print(sessionID);
-	      }
-	   }             
-	}
+      System.out.println(request.getMethod());
+      includeServiceInfo( response);
+      int sessionID = parseSessionId(request);
+      Session session = new Session(sessionID);
+      if (sessionID == 0)
+         // first time we get sessionID and userName
+         userSessionsInCreation.add(session);
+      String userName = request.getParameter(LOGIN);
+      if (userName != null) {      
+            // if userSession creation is in process... then ask to get user from account service
+            if (userSessionsInCreation.contains(session) ) {
+               // wait for authentication
+               response.getWriter().print(waitForAutentication(session, userName) );
+               messageSystem.sendMessage(new MsgGetUser(getAddress(), messageSystem.getAddressService().getAddress(AccountService.class),
+                     session, userName));
+            }
+            else {
+               // connection established 
+               response.getWriter().print(connectionEstablishedPage(session, sessionToUserSession.get(session).getUser() ) );
+            }
+         }
+         // just save session between client and server
+      else {
+         response.getWriter().print(sessionID);
+      }       
+   }
 
-   private void includeServiceInfo(Request baseRequest, HttpServletResponse response) {
+   @Override
+   protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
+         IOException {
+       handleCount.incrementAndGet();
+       includeServiceInfo( response);
+       int sessionID = parseSessionId(request);
+       Session session = new Session(sessionID);
+       if (sessionID == 0)
+          // first time we get sessionID and userName
+          userSessionsInCreation.add(session);
+       String userName = request.getParameter(LOGIN);
+       if (userName != null) {      
+             // if userSession creation is in process... then ask to get user from account service
+             if (userSessionsInCreation.contains(session) ) {
+                // wait for authentication
+                response.getWriter().print(waitForAutentication(session, userName) );
+                messageSystem.sendMessage(new MsgGetUser(getAddress(), messageSystem.getAddressService().getAddress(AccountService.class),
+                      session, userName));
+             }
+             else {
+                // connection established 
+                response.getWriter().print(connectionEstablishedPage(session, sessionToUserSession.get(session).getUser() ) );
+             }
+          }
+          // just save session between client and server
+       else {
+          response.getWriter().print(sessionID);
+       }
+   }
+
+// TODO: Old. Delete after frontEnd is done
+//   public void handle(String target, 
+//         Request baseRequest,
+//	      HttpServletRequest request,
+//	      HttpServletResponse response) throws IOException, ServletException {
+//      
+//      if (!request.getRequestURI().contains(PATH) ) 
+//         return;
+//      handleCount.incrementAndGet();
+//      includeServiceInfo(baseRequest, response);
+//	   int sessionID = parseSessionId(request);
+//	   if (sessionID == 0) {
+//	      // first page
+//	      Session session = new Session();
+//	      // begin to create user session
+//	      userSessionsInCreation.add(session);
+//	      response.getWriter().print(inputNamePage(session) );
+//	   }
+//	   else {
+//	      Session session = new Session(sessionID);
+//	      String userName = request.getParameter(LOGIN);
+//	      System.out.println(request.getMethod());
+//	      if (request.getParameter(LOGIN) != null) {      
+//	         // if userSession creation is in process... then ask to get user from account service
+//	         if (userSessionsInCreation.contains(session) ) {
+//	            // wait for authentication
+//	            response.getWriter().print(waitForAutentication(session, userName) );
+//	            messageSystem.sendMessage(new MsgGetUser(getAddress(), messageSystem.getAddressService().getAddress(AccountService.class),
+//	                  session, userName));
+//	         }
+//	         else {
+//	            // connection established 
+//	            response.getWriter().print(connectionEstablishedPage(session, sessionToUserSession.get(session).getUser() ) );
+//	         }
+//	      }
+//	      // just save session between client and server
+//	      else {
+//	         response.getWriter().print(sessionID);
+//	      }
+//	   }             
+//	}
+
+   private void includeServiceInfo(HttpServletResponse response) {
       response.setContentType("text/html;charset=utf-8");
       response.setStatus(HttpServletResponse.SC_OK);
-      baseRequest.setHandled(true);
+      //baseRequest.setHandled(true);
    }
    
    private int parseSessionId(HttpServletRequest request) {
@@ -112,25 +176,25 @@ public class FrontEnd extends AbstractHandler implements Runnable, Abonent {
       }
    }
    
-   // first page
-   private String inputNamePage(Session session) {
-      return 
-            "<body>" +
-            "<form name='input' method='post'>" +
-               "<b>Input your name: </b>" +
-               "<input type='text' name='userName' id='name'>" +
-               "<input type='hidden' name='sessionID' id='sessionID' value='" + session.getID() + "'>" +
-               "<input type='submit' value='Submit'>" +
-            "</form>" + 
-            "</body>";  
-   }
+// TODO: Old. Delete after frontEnd is don
+//   private String inputNamePage(Session session) {
+//      return 
+//            "<body>" +
+//            "<form name='input' method='post'>" +
+//               "<b>Input your name: </b>" +
+//               "<input type='text' name='userName' id='name'>" +
+//               "<input type='hidden' name='sessionID' id='sessionID' value='" + session.getID() + "'>" +
+//               "<input type='submit' value='Submit'>" +
+//            "</form>" + 
+//            "</body>";  
+//   }
    
    private String waitForAutentication(Session session, String userName) {
       return 
           "<body>" +
           "<h1>Waiting for authentication for sessionID: " + session.getID() + " ...</h1>" +
           "<form name='input' method='post'>" +
-            "<input type='hidden' name='userName' value='" + userName + "'>" +
+            "<input type='hidden' name='login' value='" + userName + "'>" +
             "<input type='hidden' name='sessionID' value='" + session.getID() + "'>" +
             "<input type='submit' value='Submit' style='visibility:hidden'>" +
           "</form>" +
@@ -172,7 +236,7 @@ public class FrontEnd extends AbstractHandler implements Runnable, Abonent {
                        "}" +
                    "};" +  
                 "}" +
-              "var refresh = setInterval(function(){ajaxAsyncRequest(\"" + GAME_ADDRESS +"\")}, " + TimeHelper.getFrontEndTick() + ")" +
+              "var refresh = setInterval(function(){ajaxAsyncRequest(\"" + PATH +"\")}, " + TimeHelper.getFrontEndTick() + ")" +
             "</script>" +
          "</body>";
    }   

@@ -1,6 +1,12 @@
 package main;
  
+import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.ContextHandler;
+import org.eclipse.jetty.server.handler.HandlerList;
+import org.eclipse.jetty.server.handler.ResourceHandler;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
 
 public class Main {
 
@@ -20,7 +26,17 @@ public class Main {
       frontEndThread.start();
       accountServiceThread.start();
       
-      SERVER.setHandler(frontEnd);
+      ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
+      context.addServlet(new ServletHolder(frontEnd), FrontEnd.PATH);
+      
+      ResourceHandler resourceHandler = new ResourceHandler();
+      resourceHandler.setDirectoriesListed(true);
+      resourceHandler.setResourceBase("static");
+      
+      HandlerList handlers = new HandlerList();
+      handlers.setHandlers(new Handler[]{resourceHandler, context});
+      SERVER.setHandler(handlers);
+      
       SERVER.start();
       SERVER.join();
    }
