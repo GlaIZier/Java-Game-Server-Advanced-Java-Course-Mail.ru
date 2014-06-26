@@ -8,11 +8,11 @@ public abstract class MsgToFrontEnd extends Msg {
 
    @Override
    public void exec(Abonent abonent) {
-      if (abonent instanceof FrontEnd) 
-         exec((FrontEnd) abonent);
+      if (abonent instanceof Logon) 
+         exec((Logon) abonent);
       else 
          System.out.println("Wrong object in MsgToFrontEnd");
    }
    
-   public abstract void exec(FrontEnd frontEnd);
+   public abstract void exec(Logon frontEnd);
 }

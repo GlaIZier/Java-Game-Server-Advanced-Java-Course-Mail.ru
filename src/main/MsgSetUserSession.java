@@ -13,7 +13,7 @@ public class MsgSetUserSession extends MsgToFrontEnd {
    }
 
    @Override
-   public void exec(FrontEnd frontEnd) {
+   public void exec(Logon frontEnd) {
       frontEnd.setUserSession(session, user);
    }
 
