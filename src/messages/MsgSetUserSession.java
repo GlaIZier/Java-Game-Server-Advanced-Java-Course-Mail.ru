@@ -1,4 +1,8 @@
-package main;
+package messages;
+
+import users.Session;
+import users.User;
+import frontend.Logon;
 
 public class MsgSetUserSession extends MsgToFrontEnd {
    

@@ -1,4 +1,5 @@
-package main;
+package messages;
+
 
 public abstract class Msg {
    

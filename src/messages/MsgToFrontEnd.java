@@ -1,4 +1,6 @@
-package main;
+package messages;
+
+import frontend.Logon;
 
 public abstract class MsgToFrontEnd extends Msg {
 

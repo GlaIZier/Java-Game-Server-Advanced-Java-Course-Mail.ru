@@ -1,11 +1,21 @@
-package main;
+package frontend;
 
 import java.io.IOException;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import users.Session;
+import users.User;
+import users.UserSession;
+import utils.TimeHelper;
+import messages.Abonent;
+import messages.Address;
+import messages.MessageSystem;
 
 public class GameFrontEnd extends HttpServlet implements Runnable, Abonent {
    
@@ -18,6 +28,8 @@ public class GameFrontEnd extends HttpServlet implements Runnable, Abonent {
    private final MessageSystem messageSystem;
    
    private final Address address;
+   
+   private Map<Session, UserSession> sessionToUserSession = new ConcurrentHashMap<>();
 
    public GameFrontEnd(MessageSystem messageSystem) {
       this.messageSystem = messageSystem;
@@ -55,8 +67,15 @@ public class GameFrontEnd extends HttpServlet implements Runnable, Abonent {
          return;
       }
       Session session = new Session(sessionID);
-      response.getWriter().print(sessionID);
+      response.getWriter().print("Hello " + sessionID);
    }  
+   
+   public void setUserSession(Session session, User user) {
+      if ( session == null || user == null )
+         throw new IllegalArgumentException();
+      UserSession userSession = new UserSession(session, user);
+      sessionToUserSession.put(session, userSession);
+   }
    
    private void includeServiceInfo(HttpServletResponse response) {
       response.setContentType("text/html;charset=utf-8");

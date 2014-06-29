@@ -1,4 +1,6 @@
-package main;
+package messages;
+
+import users.AccountService;
 
 public abstract class MsgToAccountService extends Msg{
 

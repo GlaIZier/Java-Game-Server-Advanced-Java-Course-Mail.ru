@@ -1,4 +1,4 @@
-package main;
+package frontend;
 
 import java.io.IOException;
 import java.util.Map;
@@ -11,17 +11,28 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.eclipse.jetty.server.Request;
-import org.eclipse.jetty.server.handler.AbstractHandler;
+import messages.Abonent;
+import messages.Address;
+import messages.MessageSystem;
+import messages.MsgGetUser;
+
 import org.eclipse.jetty.util.ConcurrentHashSet;
 
-public class FrontEnd extends HttpServlet implements Runnable, Abonent {
+import users.AccountService;
+import users.Session;
+import users.User;
+import users.UserSession;
+import utils.TimeHelper;
+
+public class Logon extends HttpServlet implements FrontEnd, Runnable, Abonent {
    
+   private static final long serialVersionUID = 6011218407952120472L;
+
    public static final String PATH = "/logon";
    
    private static final String SESSION_ID_PARAM = "sessionID";
    
-   private static final String LOGIN = "login";
+   private static final String LOGIN_PARAM = "login";
    
    private final MessageSystem messageSystem;
    
@@ -35,7 +46,7 @@ public class FrontEnd extends HttpServlet implements Runnable, Abonent {
    
    //private UserSession userSession = new UserSession();
    
-   public FrontEnd(MessageSystem messageSystem) {
+   public Logon(MessageSystem messageSystem) {
       this.messageSystem = messageSystem;
       this.address = new Address();
       this.messageSystem.addService(this);
@@ -58,44 +69,21 @@ public class FrontEnd extends HttpServlet implements Runnable, Abonent {
    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException,
          IOException {
       handleCount.incrementAndGet();
-      System.out.println(request.getMethod());
-      includeServiceInfo( response);
-      int sessionID = parseSessionId(request);
-      Session session = new Session(sessionID);
-      if (sessionID == 0)
-         // first time we get sessionID and userName
-         userSessionsInCreation.add(session);
-      String userName = request.getParameter(LOGIN);
-      if (userName != null) {      
-            // if userSession creation is in process... then ask to get user from account service
-            if (userSessionsInCreation.contains(session) ) {
-               // wait for authentication
-               response.getWriter().print(waitForAutentication(session, userName) );
-               messageSystem.sendMessage(new MsgGetUser(getAddress(), messageSystem.getAddressService().getAddress(AccountService.class),
-                     session, userName));
-            }
-            else {
-               // connection established 
-               response.getWriter().print(connectionEstablishedPage(session, sessionToUserSession.get(session).getUser() ) );
-            }
-         }
-         // just save session between client and server
-      else {
-         response.getWriter().print(sessionID);
-      }       
+      System.out.println("GET method isn't supported inside Logon"); 
+      response.sendRedirect("");
    }
 
    @Override
    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
          IOException {
        handleCount.incrementAndGet();
-       includeServiceInfo( response);
+       includeServiceInfo(response);
        int sessionID = parseSessionId(request);
        Session session = new Session(sessionID);
        if (sessionID == 0)
           // first time we get sessionID and userName
           userSessionsInCreation.add(session);
-       String userName = request.getParameter(LOGIN);
+       String userName = request.getParameter(LOGIN_PARAM);
        if (userName != null) {      
              // if userSession creation is in process... then ask to get user from account service
              if (userSessionsInCreation.contains(session) ) {
@@ -106,12 +94,14 @@ public class FrontEnd extends HttpServlet implements Runnable, Abonent {
              }
              else {
                 // connection established 
-                response.getWriter().print(connectionEstablishedPage(session, sessionToUserSession.get(session).getUser() ) );
+                 response.getWriter().print(connectionEstablishedPage(session, sessionToUserSession.get(session).getUser() ) );
+                // TODO response.sendRedirect(GameFrontEnd.PATH);
              }
           }
           // just save session between client and server
        else {
-          response.getWriter().print(sessionID);
+          System.out.println("No name in POST request to logon page");
+          response.sendRedirect("");
        }
    }
 
@@ -176,7 +166,7 @@ public class FrontEnd extends HttpServlet implements Runnable, Abonent {
       }
    }
    
-// TODO: Old. Delete after frontEnd is don
+// TODO: Old. Delete after frontEnd is done
 //   private String inputNamePage(Session session) {
 //      return 
 //            "<body>" +
@@ -208,7 +198,7 @@ public class FrontEnd extends HttpServlet implements Runnable, Abonent {
       return 
             "<body>" +
             "<h1 id='head'>Hello, " + user.getName() + ", with userID = " + user.getUserID() + ". Your sessionID is <span id='sessionIDHead'>" + session.getID() + "</span>.</h1>" +
-            "<form name='input' method='post'>" +
+            "<form name='input' action='game' method='POST'>" +
                "<input type='hidden' name='sessionID' id='sessionID' value='" + session.getID() + "'>" +
             "</form>" +
             "<script>" +
@@ -236,7 +226,7 @@ public class FrontEnd extends HttpServlet implements Runnable, Abonent {
                        "}" +
                    "};" +  
                 "}" +
-              "var refresh = setInterval(function(){ajaxAsyncRequest(\"" + PATH +"\")}, " + TimeHelper.getFrontEndTick() + ")" +
+              "var refresh = setInterval(function(){ajaxAsyncRequest(\"" + GameFrontEnd.PATH +"\")}, " + TimeHelper.getFrontEndTick() + ")" +
             "</script>" +
          "</body>";
    }   

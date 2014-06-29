@@ -1,4 +1,8 @@
-package main;
+package messages;
+
+import users.AccountService;
+import users.Session;
+import users.User;
 
 public class MsgGetUser extends MsgToAccountService{
    
