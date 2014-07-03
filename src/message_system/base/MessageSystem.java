@@ -1,4 +1,4 @@
-package messages;
+package message_system.base;
 
 import java.util.Map;
 import java.util.Queue;

@@ -1,5 +1,8 @@
-package messages;
+package message_system.account_messages;
 
+import message_system.base.Abonent;
+import message_system.base.Address;
+import message_system.base.Msg;
 import users.AccountService;
 
 public abstract class MsgToAccountService extends Msg{

@@ -1,4 +1,5 @@
-package messages;
+package message_system.base;
+
 
 
 public abstract class Msg {

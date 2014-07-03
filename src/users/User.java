@@ -4,19 +4,19 @@ public class User {
    
    private final String name;
    
-   private final int userID;
+   private final int id;
 
    public User(String name, int userID) {
       this.name = name;
-      this.userID = userID;
+      this.id = userID;
    }
 
    public String getName() {
       return name;
    }
 
-   public int getUserID() {
-      return userID;
+   public int getId() {
+      return id;
    }
 
 }

@@ -5,9 +5,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import utils.TimeHelper;
-import messages.Abonent;
-import messages.Address;
-import messages.MessageSystem;
+import message_system.base.Abonent;
+import message_system.base.Address;
+import message_system.base.MessageSystem;
 
 public class AccountService implements Runnable, Abonent {
    

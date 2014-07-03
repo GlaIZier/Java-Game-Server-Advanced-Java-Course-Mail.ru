@@ -1,8 +1,10 @@
 package users;
 
+import javax.servlet.http.HttpSession;
+
 public class UserSession {
    
-   private final Session session;
+   private final HttpSession session;
    
    private final User user;
    
@@ -14,7 +16,7 @@ public class UserSession {
    
    private int clickedByEnemy;
    
-   public UserSession(Session session, User user) {
+   public UserSession(HttpSession session, User user) {
       this.session = session;
       this.user = user;
    }
@@ -51,7 +53,7 @@ public class UserSession {
       this.clickedByEnemy = clickedByEnemy;
    }
 
-   public Session getSession() {
+   public HttpSession getSession() {
       return session;
    }
 

@@ -18,9 +18,9 @@ public class PageGenerator {
       Writer writer = new StringWriter();
       try {
          Template template = CFG.getTemplate(TEMPLATES_DIR + File.separator + fileName);
+         // merges data model with template
          template.process(data, writer);
       } catch (Exception e) {
-         // TODO Auto-generated catch block
          e.printStackTrace();
       }
       return writer.toString();
