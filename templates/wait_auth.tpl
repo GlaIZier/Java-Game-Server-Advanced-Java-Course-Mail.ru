@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>Waiting for authentication</title>
-    <script type="text/javascript" src="js/wait_auth.js"></script>
+    <script type='text/javascript' src='js/wait_auth.js'></script>
     <script> Refresh.start(${refreshInterval}) </script>
 </head>
 <body> 

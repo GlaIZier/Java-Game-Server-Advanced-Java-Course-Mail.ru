@@ -84,15 +84,9 @@ public class Logon extends HttpServlet implements Runnable, Abonent {
          messageSystem.sendMessage(new MsgGetUser(getAddress(), messageSystem.getAddressService()
                .getAddress(AccountService.class), session, userName));
       }
-      // if userSession creation is in process... then ask to get user from account service
+      // if userSession creation is in process... then return wait page
       if (userSessionsInCreation.contains(session)) {
-         // wait for authentication
-         Map<String, Object> pageVars = new HashMap<>();
-         pageVars.put("sessionId", session.getId());
-         pageVars.put("userName", userName);
-         pageVars.put("refreshInterval", Integer.toString(TimeHelper.getFrontEndTick() ) );
-         // TODO refactor
-         response.getWriter().print(PageGenerator.getPage(TEMPLATE, pageVars) );
+         response.getWriter().print(getWaitPage(session, userName));
          //response.getWriter().print(waitForAuthentication(session, userName));
       } 
       else {
@@ -101,6 +95,10 @@ public class Logon extends HttpServlet implements Runnable, Abonent {
       }
       
    }
+   
+   public void deleteCreatedUserSession(HttpSession session) {
+      userSessionsInCreation.remove(session);
+   }
 
    private void includeServiceInfo(HttpServletResponse response) {
       response.setContentType("text/html;charset=utf-8");
@@ -108,10 +106,12 @@ public class Logon extends HttpServlet implements Runnable, Abonent {
       //baseRequest.setHandled(true);
    }
    
-   
-   
-   public void deleteCreatedUserSession(HttpSession session) {
-      userSessionsInCreation.remove(session);
+   private String getWaitPage(HttpSession session, String userName) {
+      Map<String, Object> pageVars = new HashMap<>();
+      pageVars.put("sessionId", session.getId());
+      pageVars.put("userName", userName);
+      pageVars.put("refreshInterval", Integer.toString(TimeHelper.getFrontEndTick() ) );
+      return PageGenerator.getPage(TEMPLATE, pageVars);
    }
 
 }
