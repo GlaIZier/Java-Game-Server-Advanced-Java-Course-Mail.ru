@@ -7,7 +7,7 @@
 </head>
 <body>
    <h1 id='head'>
-      Hello, ${user.name}, with userId = ${user.id}. Your
+      Hello, ${user.name}, with userId = <span id='userId'>${user.id}</span>. Your
       sessionId is <span id='sessionIdHead'>${sessionId}</span>.
    </h1>
 </body>
