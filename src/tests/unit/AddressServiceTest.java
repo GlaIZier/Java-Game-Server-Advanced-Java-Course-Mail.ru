@@ -20,7 +20,7 @@ public class AddressServiceTest {
    
    @Test
    public void testGetAddress() {
-      Logon logon = new Logon(new MessageSystem() );
+      Logon logon = new Logon(MessageSystem.getInstance() );
       as.setAddress(logon);
       assertEquals(as.getAddress(Logon.class), logon.getAddress() );
    }

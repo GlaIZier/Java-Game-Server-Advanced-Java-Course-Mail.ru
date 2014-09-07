@@ -1,4 +1,4 @@
-package server.message_system.frontend_messages;
+package server.message_system.frontend_messages.game;
 
 import server.frontend.Game;
 import server.message_system.base.Abonent;
@@ -9,17 +9,18 @@ public abstract class MsgToGame extends Msg {
 
    public MsgToGame(Address from, Address to) {
       super(from, to);
-
    }
-   
+
    @Override
    public void exec(Abonent abonent) {
-      if (abonent instanceof Game) 
-         exec((Game) abonent);
-      else 
-         System.out.println("Wrong object in MsgToFrontEnd");
+      if (abonent instanceof Game) {
+         exec( (Game)abonent);
+      }
+      else {
+         System.out.println("Wrong class of object in MsgToLogon: " + abonent.getClass().getName() );
+      }
    }
-   
-   public abstract void exec(Game game);
 
+   public abstract void exec(Game game);
+   
 }

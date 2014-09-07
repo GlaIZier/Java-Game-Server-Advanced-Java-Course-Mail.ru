@@ -1,4 +1,4 @@
-package server.message_system.frontend_messages;
+package server.message_system.frontend_messages.logon;
 
 import server.frontend.Logon;
 import server.message_system.base.Abonent;
@@ -16,7 +16,7 @@ public abstract class MsgToLogon extends Msg {
       if (abonent instanceof Logon) 
          exec((Logon) abonent);
       else 
-         System.out.println("Wrong object in MsgToLogon");
+         System.out.println("Wrong class of object in MsgToLogon: " + abonent.getClass().getName() );
    }
    
    public abstract void exec(Logon logon);

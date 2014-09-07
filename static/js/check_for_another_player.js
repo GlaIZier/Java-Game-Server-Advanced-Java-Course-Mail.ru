@@ -20,6 +20,11 @@ var ConnectionHolder = ConnectionHolder || (function () {
                //document.getElementById('sessionId').value = response; 
                document.getElementById('sessionIdHead').innerHTML = response; 
             } 
+            else if (xmlhttp.status == 301) {
+            	//window.location.replace(xmlhttp.responseText);
+            	//alert("Redirect to " + xmlhttp.responseText);
+            	window.location.href = xmlhttp.responseText;
+            }
             else { 
                clearInterval(_refresher); 
                console.error('Something is wrong!'); 

@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import server.message_system.base.Abonent;
 import server.message_system.base.Address;
 import server.message_system.base.MessageSystem;
+import server.utils.Context;
 import server.utils.TimeHelper;
 
 public class AccountService implements Runnable, Abonent {
@@ -20,6 +21,12 @@ public class AccountService implements Runnable, Abonent {
    private final Address address;
    
    private final MessageSystem messageSystem;
+   
+   public AccountService(Context context) {
+      this.messageSystem = (MessageSystem) context.getImplementation(MessageSystem.class);
+      address = new Address();
+      this.messageSystem.addService(this);
+   }
    
    public AccountService(MessageSystem messageSystem) {
       this.messageSystem = messageSystem;

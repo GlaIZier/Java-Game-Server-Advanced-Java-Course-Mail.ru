@@ -17,7 +17,7 @@ public class AccountServiceTest {
 
    @Before
    public void setUp() throws Exception {
-      ms = new MessageSystem();
+      ms = MessageSystem.getInstance();
       as = new AccountService(ms);
    }
 

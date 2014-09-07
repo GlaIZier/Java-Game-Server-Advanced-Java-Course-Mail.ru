@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-   <title>Connection established</title>
-   <script type='text/javascript' src='js/connection_established.js'></script>
+   <title>Waiting for another player</title>
+   <script type='text/javascript' src='js/check_for_another_player.js'></script>
    <script> ConnectionHolder.start('${path}', ${ajaxInterval})  </script>
 </head>
 <body>
    <h1 id='head'>
       Hello, ${user.name}, with userId = <span id='userId'>${user.id}</span>. Your
-      sessionId is <span id='sessionIdHead'>${sessionId}</span>.
+      sessionId is <span id='sessionIdHead'>${sessionId}</span>. Wait for another player.
    </h1>
 </body>
 </html>

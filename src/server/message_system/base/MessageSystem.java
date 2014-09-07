@@ -7,11 +7,23 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import server.utils.TimeHelper;
 
+// Lazy concurrent Singlton
 public class MessageSystem {
    
    private final Map<Address, ConcurrentLinkedQueue<Msg>> messages = new ConcurrentHashMap<>();
    
    private final AddressService addressService = new AddressService();
+   
+   public static MessageSystem getInstance() {
+      return InstanceHolder.INSTANCE;
+   }
+   
+   private static class InstanceHolder {
+      private static final MessageSystem INSTANCE = new MessageSystem();
+      private InstanceHolder() {};
+   }
+   
+   private MessageSystem() {};
    
    public void addService(Abonent abonent) {
       addressService.setAddress(abonent);

@@ -1,4 +1,4 @@
-package server.message_system.frontend_messages;
+package server.message_system.frontend_messages.logon;
 
 import javax.servlet.http.HttpSession;
 
@@ -16,7 +16,7 @@ public class MsgUserSessionWasCreated extends MsgToLogon {
 
    @Override
    public void exec(Logon logon) {
-      logon.deleteCreatedUserSession(session);     
+      logon.deleteCreatedUserSession(session);
    }
 
 }

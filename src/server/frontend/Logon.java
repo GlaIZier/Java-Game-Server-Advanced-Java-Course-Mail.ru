@@ -19,6 +19,7 @@ import server.message_system.base.Abonent;
 import server.message_system.base.Address;
 import server.message_system.base.MessageSystem;
 import server.users.AccountService;
+import server.utils.Context;
 import server.utils.TimeHelper;
 
 public class Logon extends HttpServlet implements Runnable, Abonent {
@@ -38,6 +39,12 @@ public class Logon extends HttpServlet implements Runnable, Abonent {
    private AtomicInteger handleCount = new AtomicInteger();
    
    private Set<HttpSession> userSessionsInCreation = new ConcurrentHashSet<>();
+   
+   public Logon(Context context) {
+      this.messageSystem = (MessageSystem) context.getImplementation(MessageSystem.class);
+      this.address = new Address();
+      this.messageSystem.addService(this);
+   }
    
    public Logon(MessageSystem messageSystem) {
       this.messageSystem = messageSystem;
@@ -69,7 +76,7 @@ public class Logon extends HttpServlet implements Runnable, Abonent {
    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
          IOException {
       handleCount.incrementAndGet();
-      includeServiceInfo(response);
+      includeOkInfo(response);
       String userName = request.getParameter(LOGIN_PARAM);
       if (userName == null) {
          System.out.println("No name in POST request to Logon!");
@@ -88,8 +95,8 @@ public class Logon extends HttpServlet implements Runnable, Abonent {
          //response.getWriter().print(waitForAuthentication(session, userName));
       } 
       else {
-         // connection established
-         response.sendRedirect(Game.PATH);
+         // redirect to waiting for players page
+         response.sendRedirect(Waiting.PATH);
       }
       
    }
@@ -100,7 +107,7 @@ public class Logon extends HttpServlet implements Runnable, Abonent {
       userSessionsInCreation.remove(session);
    }
 
-   private void includeServiceInfo(HttpServletResponse response) {
+   private void includeOkInfo(HttpServletResponse response) {
       response.setContentType("text/html;charset=utf-8");
       response.setStatus(HttpServletResponse.SC_OK);
       //baseRequest.setHandled(true);
