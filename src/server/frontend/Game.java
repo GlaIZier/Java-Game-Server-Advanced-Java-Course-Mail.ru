@@ -1,6 +1,7 @@
 package server.frontend;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -23,6 +24,10 @@ public class Game extends HttpServlet implements Runnable, Abonent {
    private static final long serialVersionUID = 1204679657775275767L;
    
    private static final String TEMPLATE = "game.tpl";
+   
+   private static final String CLICKS_PARAM = "clicks";
+   
+   private static final String LOADING_RESPONSE = "Loading...";
    
    private final MessageSystem messageSystem;
    
@@ -58,15 +63,56 @@ public class Game extends HttpServlet implements Runnable, Abonent {
    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException,
          IOException {
       includeOkInfo(response);
+      HttpSession session = request.getSession(false);
+      if (session == null) {
+         System.out.println("No session in GET request to Game!");
+         response.sendRedirect("");
+         return;
+      }
+      UserSession userSession = sessionToPlayers.get(session);
+      if (userSession == null) {
+         System.out.println("Error in GET request to Game. No player with " + session.getId() + " session!");
+         response.sendRedirect("");
+         return;
+      }
+      response.getWriter().print(getGamePage(userSession) );
+      /* Test
       for (Map.Entry<HttpSession, UserSession> sessionToPlayer : sessionToPlayers.entrySet() ) {
          response.getWriter().print("Hello, " + sessionToPlayer.getKey() );
       }
+      */
    }
 
    @Override
    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
          IOException {
+      HttpSession session = request.getSession();
+      if (session == null || session.isNew() ) {
+         System.out.println("Unknown or no session in POST request to Game!");
+         response.sendRedirect("");
+      }
+      if (!sessionToPlayers.containsKey(session) ) {
+         System.out.println("Unknown or no session in POST request to Game!");
+         response.sendRedirect("");
+      }
+      String clicks = request.getParameter(CLICKS_PARAM);
+      if (clicks != null) {
+         // send msg with clicks
+      }
+      else {
+         //check if game result is ready
+         if (sessionToPlayers.get(session).getGameResult() != null) {
+            
+         }
+         else {
+            response.getWriter().print(createJson(LOADING_RESPONSE, LOADING_RESPONSE));
+         }
+      }
    }  
+   
+   private String createJson(String gameResult, String enemyClicks) {
+      return "{ \"gameResult\": \"Loading...\", \"enemyClicks\": \"Loading...\" }";
+   }
    
    private void includeOkInfo(HttpServletResponse response) {
       response.setContentType("text/html;charset=utf-8");
@@ -78,6 +124,15 @@ public class Game extends HttpServlet implements Runnable, Abonent {
          throw new IllegalArgumentException();
       if (sessionToPlayers.put(player.getSession(), player) != null ) 
          System.out.println("Replace existing session in Game while adding new player!");
+   }
+   
+   
+   private String getGamePage(UserSession userSession) {
+      Map<String, Object> gamePageVars = new HashMap<>();
+      gamePageVars.put("userName", userSession.getMe().getName() );
+      gamePageVars.put("enemyName", userSession.getEnemy().getName() );
+      gamePageVars.put("gameTime", userSession.getTimeToFinish() );
+      return PageGenerator.getPage(TEMPLATE, gamePageVars);
    }
    
    public MessageSystem getMessageSystem() {

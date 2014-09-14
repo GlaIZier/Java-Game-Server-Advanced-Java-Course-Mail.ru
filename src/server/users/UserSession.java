@@ -8,13 +8,15 @@ public class UserSession implements Comparable<UserSession> {
    
    private final User me;
    
-   private int timeToFinish;
+   private int timeToFinish = -1;
    
-   private int clickedByMe;
+   private int clickedByMe = -1;
    
    private User enemy;
    
-   private int clickedByEnemy;
+   private int clickedByEnemy = -1;
+   
+   private String gameResult;
    
    public UserSession(HttpSession session, User user) {
       this.session = session;
@@ -59,6 +61,15 @@ public class UserSession implements Comparable<UserSession> {
 
    public User getMe() {
       return me;
+   }
+   
+
+   public String getGameResult() {
+      return gameResult;
+   }
+
+   public void setGameResult(String gameResult) {
+      this.gameResult = gameResult;
    }
 
    // use as key in Set in GameMechanics

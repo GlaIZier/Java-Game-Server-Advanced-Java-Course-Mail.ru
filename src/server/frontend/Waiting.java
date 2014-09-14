@@ -55,11 +55,10 @@ public class Waiting extends HttpServlet implements Runnable, Abonent {
    @Override
    public void run() {
       while (true) {
-         // TODO under testing
          messageSystem.execWithDynamicSleepFor(this);
 //         messageSystem.execFor(this);
 //         TimeHelper.sleep(TimeHelper.SERVER_TICK_IN_MILLIS );
-         System.out.println(waitingUsers.size() );
+//         System.out.println(waitingUsers.size() );
       }
    }
 
@@ -88,13 +87,12 @@ public class Waiting extends HttpServlet implements Runnable, Abonent {
    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
          IOException {
       HttpSession session = request.getSession();
-      if (session == null || session.isNew()) 
+      if (session == null || session.isNew())
          response.sendRedirect("");
       if (waitingUsers.containsKey(session) ) {
          includeOkInfo(response);
          response.getWriter().print("AJAX: " + session.getId());
       }
-      // TODO here redirect to game
       else {
          response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
          response.getWriter().print("/game");
