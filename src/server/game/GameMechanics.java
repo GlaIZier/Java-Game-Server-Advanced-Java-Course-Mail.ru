@@ -79,6 +79,22 @@ public class GameMechanics implements Runnable, Abonent {
          messageSystem.sendMessage(new MsgAddPlayer(address, messageSystem.getAddressService()
                .getAddress(Game.class), second) );
       }
+      /* Legacy Code
+       Set<UserSession> gameSessionChunk = new HashSet<>();
+       for (UserSession us : waitingPlayers) {
+          gameSessionChunk.add(us);
+          // if added a full chunk of players in game
+          if (gameSessionChunk.size() % PLAYERS_NUMBER_IN_GAME == 0) {
+             GameSession newGameSession = new GameSession(gameSessionChunk);
+             // add new players to players
+             for (UserSession userInNewGameSession : gameSessionChunk) {
+                players.put(userInNewGameSession, newGameSession);
+                waitingPlayers.remove(userInNewGameSession);
+             }
+             gameSessionChunk.clear();
+          }
+       }
+       */
    }
    
    private void exchangeEnemies(UserSession player1, UserSession player2) {
@@ -95,8 +111,10 @@ public class GameMechanics implements Runnable, Abonent {
       player.finishClicks();
       GameSession gameSession = playersToGameSession.get(player);
       UserSession enemy = gameSession.getEnemyOf(player);
+      System.out.println("Added clicks " + clicks + " to: " + player.getSession().getId() );
       if (enemy.finishedClicks() ) {
          finishGameSession(player, enemy, gameSession);
+         //TODO Delete gameSession and players?
       }
    }
    
@@ -109,6 +127,7 @@ public class GameMechanics implements Runnable, Abonent {
       messageSystem.sendMessage(new MsgSendUpdatedPlayer(address, 
             messageSystem.getAddressService().getAddress(Game.class), enemy) );
       deleteGameSessionForPlayers(player, enemy);
+      System.out.println("Finish game in game session");
    }
    
    private void exchangeEnemiesClicks(UserSession player1, UserSession player2) {
@@ -135,7 +154,9 @@ public class GameMechanics implements Runnable, Abonent {
       if (player1 == null || player2 == null) 
          throw new IllegalArgumentException();
       if (playersToGameSession.remove(player1) == null) 
-         System.out.println("No such player: " + player1.getSession().getId() + "in game. Couldn't delete it");
+         System.out.println("No such player: " + player1.getSession().getId() + "in GameMechanics. Couldn't delete it");
+      if (playersToGameSession.remove(player2) == null) 
+         System.out.println("No such player: " + player2.getSession().getId() + "in GameMechanics. Couldn't delete it");
    }
    
 }

@@ -22,7 +22,8 @@ var Game = Game || (function() {
    var _gameOver = function() {
       clearInterval(_timer);
       document.getElementById('button_click_me').disabled = true;
-      document.getElementById('button_close').disabled = true;
+      document.getElementById('button_next_game').disabled = true;
+      document.getElementById('button_logout').disabled = true;
       document.getElementById('game').style.visibility = "hidden";
       document.getElementById('overlay').style.visibility ="visible";
       document.getElementById('overlay_clicks').innerHTML = _clicks;
@@ -59,7 +60,8 @@ var Game = Game || (function() {
                   console.log(xmlhttp.responseText);
                   var json = JSON.parse(xmlhttp.responseText);
                   if (_writeResults(json) ) {
-                     document.getElementById('button_close').disabled = false;
+                     document.getElementById('button_next_game').disabled = false;
+                     document.getElementById('button_logout').disabled = false;
                      clearInterval(getResultsTimer);
                   }
                }
@@ -93,6 +95,24 @@ var Game = Game || (function() {
          _remaining = remaining;
          document.getElementById('timer').innerHTML = remaining;
          _timer = setInterval(function() { _tick(1) }, 1000);
+      },
+      
+      nextGame: function() {
+         var xmlhttp = new XMLHttpRequest();
+         xmlhttp.open('POST', '/logon', true);
+         xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+         var name = document.getElementById('user_name').innerHTML
+         xmlhttp.send("login=" + name); 
+         xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == 4) { 
+               if (xmlhttp.status == 200) { 
+                  console.log("Redirect to logon... OK!");
+               }
+               else { 
+                  console.error('Something went wrong while sending clicks!'); 
+               }
+            }
+         };
       },
       
    };

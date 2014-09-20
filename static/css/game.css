@@ -10,7 +10,8 @@
 }
 
 #button_click_me,
-#button_close {
+#button_logout,
+#button_next_game {
    width: 100px;
    height:25px;
 }

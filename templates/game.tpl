@@ -9,7 +9,7 @@
    <div id='main'>
       <div id='game'>
          <div id='greeting'>
-            <h4>Click faster! You: ${userName}. Enemy: ${enemyName}.</h4>
+            <h4>Click faster! You: <span id='user_name'>${userName}</span>. Enemy: ${enemyName}.</h4>
          </div>
          <div id='game_area'>
             <div id='timer_label'>
@@ -34,9 +34,13 @@
             Your enemy (${enemyName}) clicked: <span id='overlay_enemy_clicks'>loading...</span> times.
          </div>
           <div id='close' class='button'>
+            <form name='input' action='/logon' method='POST'>
+               <input type='hidden' name='login' id='login' value='${userName}'/>
+               <input id='button_next_game' type='submit' value='Next game'>
+            </form>   
             <a id='close_link' href='/'>
-               <input id='button_close' type='button' value='Close'>
-            </a>   
+               <input id='button_logout' type='button' value='Log out'>
+            </a>               
           </div>
       </div>
    </div>
