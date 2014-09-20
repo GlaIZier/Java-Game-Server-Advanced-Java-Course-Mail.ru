@@ -8,15 +8,25 @@ public class GameSession {
    
    private final UserSession second;
    
+   private boolean gameFinished;
+
    public GameSession(UserSession first, UserSession second) {
-      first.setTimeToFinish(GameMechanics.GAME_TIME_IN_SECONDS);
-      second.setTimeToFinish(GameMechanics.GAME_TIME_IN_SECONDS);
-      first.setEnemy(second.getMe() );
-      second.setEnemy(first.getMe() );
       this.first = first;
       this.second = second;
    }
    
+   public UserSession getEnemyOf(UserSession player) {
+      if (player.equals(first) )
+         return second;
+      else 
+         return first;
+   }
    
-
+   public void finishGame() {
+      gameFinished = true;
+   }
+   
+   public boolean isGameFinished() {
+      return gameFinished;
+   }
 }

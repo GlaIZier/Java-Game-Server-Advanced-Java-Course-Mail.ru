@@ -2,21 +2,25 @@ package server.users;
 
 import javax.servlet.http.HttpSession;
 
+import server.game.GameResult;
+
 public class UserSession implements Comparable<UserSession> {
    
    private final HttpSession session;
    
    private final User me;
    
-   private int timeToFinish = -1;
+   private int timeToFinish;
    
-   private int clickedByMe = -1;
+   private int clickedByMe;
    
    private User enemy;
    
-   private int clickedByEnemy = -1;
+   private int clickedByEnemy;
    
-   private String gameResult;
+   private GameResult gameResult;
+   
+   private boolean clicksFinished;
    
    public UserSession(HttpSession session, User user) {
       this.session = session;
@@ -28,6 +32,8 @@ public class UserSession implements Comparable<UserSession> {
    }
 
    public void setTimeToFinish(int timeToFinish) {
+      if (timeToFinish <= 0) 
+         throw new IllegalArgumentException();
       this.timeToFinish = timeToFinish;
    }
 
@@ -35,8 +41,16 @@ public class UserSession implements Comparable<UserSession> {
       return clickedByMe;
    }
 
-   public void setClickedByUser(int clickedByUser) {
-      this.clickedByMe = clickedByUser;
+   public void setClickedByUser(int clicks) {
+      if (clicks < 0) 
+         throw new IllegalArgumentException();
+      this.clickedByMe = clicks;
+   }
+   
+   public void addClicksToMe(int clicks) {
+      if (clicks < 0)
+         throw new IllegalArgumentException();
+      clickedByMe += clicks;
    }
 
    public User getEnemy() {
@@ -51,8 +65,16 @@ public class UserSession implements Comparable<UserSession> {
       return clickedByEnemy;
    }
 
-   public void setClickedByEnemy(int clickedByEnemy) {
-      this.clickedByEnemy = clickedByEnemy;
+   public void setClickedByEnemy(int clicks) {
+      if (clicks < 0) 
+         throw new IllegalArgumentException();
+      this.clickedByEnemy = clicks;
+   }
+   
+   public void addClicksToEnemy(int clicks) {
+      if (clicks < 0)
+         throw new IllegalArgumentException();
+      clickedByEnemy += clicks;
    }
 
    public HttpSession getSession() {
@@ -63,13 +85,24 @@ public class UserSession implements Comparable<UserSession> {
       return me;
    }
    
-
-   public String getGameResult() {
+   public GameResult getGameResult() {
       return gameResult;
    }
+   
+   public String getGameResultMsg() {
+      return gameResult.toString();
+   }
 
-   public void setGameResult(String gameResult) {
+   public void setGameResult(GameResult gameResult) {
       this.gameResult = gameResult;
+   }
+   
+   public void finishClicks() {
+      clicksFinished = true;
+   }
+   
+   public boolean finishedClicks() {
+      return clicksFinished;
    }
 
    // use as key in Set in GameMechanics

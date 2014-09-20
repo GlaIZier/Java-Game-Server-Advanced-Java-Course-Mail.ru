@@ -56,9 +56,6 @@ public class Waiting extends HttpServlet implements Runnable, Abonent {
    public void run() {
       while (true) {
          messageSystem.execWithDynamicSleepFor(this);
-//         messageSystem.execFor(this);
-//         TimeHelper.sleep(TimeHelper.SERVER_TICK_IN_MILLIS );
-//         System.out.println(waitingUsers.size() );
       }
    }
 

@@ -33,6 +33,7 @@ var Game = Game || (function() {
    var _sendClicks = function(toUrl) {
       var xmlhttp = new XMLHttpRequest();
       xmlhttp.open('POST', toUrl, true);
+      xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');       
       xmlhttp.send("clicks=" + _clicks); 
       xmlhttp.onreadystatechange = function() {
          if (xmlhttp.readyState == 4) { 
@@ -50,6 +51,7 @@ var Game = Game || (function() {
       var getResultsTimer = setInterval(function() {
          var xmlhttp = new XMLHttpRequest();
          xmlhttp.open('POST', fromUrl, true);
+         xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');       
          xmlhttp.send(); 
          xmlhttp.onreadystatechange = function() { 
             if (xmlhttp.readyState == 4) { 
