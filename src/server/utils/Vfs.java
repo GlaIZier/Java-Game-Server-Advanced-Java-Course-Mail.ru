@@ -6,7 +6,12 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Queue;
 
 public class Vfs {
    
@@ -95,10 +100,89 @@ public class Vfs {
       return text.toString();
    }
    
-   public Iterator<String> getIterator(String startDir) {
-      return null;
+   public Iterator<String> dfsIterator(String startDir) {
+      return new DfsFileIterator(startDir);
    }
    
+   private final class DfsFileIterator implements Iterator<String> {
+      
+      private List<File> filesList = new ArrayList<>();
+      
+      private int nextIndex;
+      
+      private DfsFileIterator(String startDir) {
+         File start = new File(root + startDir);
+         dfs(start);
+      }
+      
+      private void dfs(File current) {
+         if (current.listFiles() == null) {
+            filesList.add(current);
+            return;
+         }
+         for (File child : current.listFiles() ) {
+            dfs(child);
+         }
+         // add current directory
+         filesList.add(current);
+      }
+
+      @Override
+      public boolean hasNext() {
+         return nextIndex < filesList.size() ;
+      }
+
+      @Override
+      public String next() {
+         if (!hasNext() )
+            throw new NoSuchElementException();
+         return filesList.get(nextIndex++).toString();
+      }
+
+      @Override
+      public void remove() {
+         throw new UnsupportedOperationException();
+      }
+      
+   }
+   
+   public Iterator<String> bfsIterator(String startDir) {
+      return new BfsFileIterator(startDir);
+   }
+   
+   private final class BfsFileIterator implements Iterator<String> {
+      
+      private Queue<File> filesQueue = new LinkedList<>();
+      
+      private BfsFileIterator(String startDir) {
+         File start = new File(root + startDir);
+         filesQueue.add(start);
+      }
+
+      @Override
+      public boolean hasNext() {
+         return !filesQueue.isEmpty();
+      }
+
+      @Override
+      public String next() {
+         File next = filesQueue.poll();
+         if (next.isDirectory() ) {
+            for (File child : next.listFiles()) {
+               filesQueue.add(child);
+            }
+         }
+         return next.toString();
+      }
+      
+      @Override
+      public void remove() {
+         throw new UnsupportedOperationException();
+      }
+      
+   }
+   
+   // @Test
    public static void main(String[] args) {
       Vfs vfs = new Vfs("D:\\www\\");
       System.out.println(vfs.getAbsolutePath("h.txt") );
@@ -108,6 +192,20 @@ public class Vfs {
       for (int i = 0; i < b.length; i++)
          System.out.print( (char) b[i] + " ");
       System.out.println(vfs.getUtf8Text("h.txt") );
+      
+      vfs = new Vfs("D:\\www\\HTC_Home_Apis");
+      Iterator<String> dfsIterator = vfs.dfsIterator("");
+      System.out.println("DFS: ");
+      while (dfsIterator.hasNext() ) {
+         System.out.println(dfsIterator.next() );
+      }
+      
+      Iterator<String> bfsIterator = vfs.bfsIterator("");
+      System.out.println("BFS: ");
+      while (bfsIterator.hasNext() ) {
+         System.out.println(bfsIterator.next() );
+      }
+
    }
 
 }
