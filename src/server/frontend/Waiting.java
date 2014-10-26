@@ -92,7 +92,7 @@ public class Waiting extends HttpServlet implements Runnable, Abonent {
       }
       else {
          response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
-         response.getWriter().print("/game");
+         response.getWriter().print(Game.PATH);
       }
    }  
    
@@ -132,42 +132,3 @@ public class Waiting extends HttpServlet implements Runnable, Abonent {
    }
    
 }
-
-
-// TODO delete after frontend is done
-//private String connectionEstablishedPage(HttpSession session, User user) {
-//   return 
-//         "<body>" +
-//         "<h1 id='head'>Hello, " + user.getName() + ", with userID = " + user.getId() + ". Your sessionID is <span id='sessionIDHead'>" + session.getId() + "</span>.</h1>" +
-//         "<form name='input' action='game' method='POST'>" +
-//            "<input type='hidden' name='sessionID' id='sessionID' value='" + session.getId() + "'>" +
-//         "</form>" +
-//         "<script>" +
-//            // ajax test
-//            "function ajaxAsyncRequest(reqURL) {" +
-//                //Creating a new XMLHttpRequest object
-//                "var xmlhttp = new XMLHttpRequest();" + 
-//                //Create a asynchronous GET request
-//                "xmlhttp.open('POST', reqURL, true);" + 
-//                "xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');" +        
-//                "var sessionID = document.getElementById('sessionID').value;" + 
-//                "xmlhttp.send('sessionID=' + sessionID);" +
-//                 //When readyState is 4 then get the server output
-//                "xmlhttp.onreadystatechange = function() {" +
-//                   "if (xmlhttp.readyState == 4) {" +
-//                       "if (xmlhttp.status == 200) {" +
-//                           "var response = xmlhttp.responseText;" +
-//                           "document.getElementById('sessionID').value = response;" +
-//                           "document.getElementById('sessionIDHead').innerHTML = response;" +
-//                        "}" +
-//                        "else {" +
-//                           "clearInterval(refresh);" +
-//                           "alert('Something is wrong!');" +
-//                        "}" +
-//                    "}" +
-//                "};" +  
-//             "}" +
-//           "var refresh = setInterval(function(){ajaxAsyncRequest(\"" + Game.PATH +"\")}, " + TimeHelper.getFrontEndTick() + ")" +
-//         "</script>" +
-//      "</body>";
-//}   

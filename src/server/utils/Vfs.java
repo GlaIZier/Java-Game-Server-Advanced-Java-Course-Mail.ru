@@ -193,7 +193,7 @@ public class Vfs {
          System.out.print( (char) b[i] + " ");
       System.out.println(vfs.getUtf8Text("h.txt") );
       
-      vfs = new Vfs("D:\\www\\HTC_Home_Apis");
+      vfs = new Vfs("D:\\www\\selenium-2.42.2");
       Iterator<String> dfsIterator = vfs.dfsIterator("");
       System.out.println("DFS: ");
       while (dfsIterator.hasNext() ) {

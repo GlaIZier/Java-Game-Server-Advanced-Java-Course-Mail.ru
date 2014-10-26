@@ -61,7 +61,8 @@ public class GameMechanics implements Runnable, Abonent {
          return;
       }
       waitingPlayers.add(userSession);
-      createGameSessions();
+      if (waitingPlayers.size() >= PLAYERS_NUMBER_IN_GAME) 
+         createGameSessions();
    }
 
    private void createGameSessions() {
