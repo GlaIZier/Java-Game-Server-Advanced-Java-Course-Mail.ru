@@ -5,6 +5,7 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import server.main.ServerSettings;
 import server.utils.TimeHelper;
 
 // Lazy concurrent Singlton
@@ -52,8 +53,8 @@ public class MessageSystem {
       long startTime = System.currentTimeMillis();
       execFor(abonent);
       long deltaTime = System.currentTimeMillis() - startTime;
-      float load = deltaTime / TimeHelper.SERVER_TICK_IN_MILLIS;
+      float load = deltaTime / ServerSettings.SERVER_TICK_IN_MILLIS;
       if (load < 1)
-         TimeHelper.sleep(TimeHelper.SERVER_TICK_IN_MILLIS);
+         TimeHelper.sleep(ServerSettings.SERVER_TICK_IN_MILLIS);
    }
 }

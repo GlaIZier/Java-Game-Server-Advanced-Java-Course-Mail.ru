@@ -10,14 +10,12 @@ import freemarker.template.Template;
 
 public class PageGenerator {
    
-   private static final String TEMPLATES_DIR = "templates";
-   
    private static final Configuration CFG = new Configuration();
    
-   public static String getPage(String fileName, Map<String, Object> data) {
+   public static String getPage(String templatesDir, String fileName, Map<String, Object> data) {
       Writer writer = new StringWriter();
       try {
-         Template template = CFG.getTemplate(TEMPLATES_DIR + File.separator + fileName);
+         Template template = CFG.getTemplate(templatesDir + File.separator + fileName);
          // merges data model with template
          template.process(data, writer);
       } catch (Exception e) {

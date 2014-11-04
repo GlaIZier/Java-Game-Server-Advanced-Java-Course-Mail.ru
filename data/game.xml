@@ -1,0 +1,4 @@
+<class type="server.resources.GameResource">
+   <playersNumber>2</playersNumber>
+   <gameTimeInSec>2</gameTimeInSec>
+</class>

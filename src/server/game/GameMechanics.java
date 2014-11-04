@@ -11,18 +11,21 @@ import server.message_system.base.Address;
 import server.message_system.base.MessageSystem;
 import server.message_system.frontend_messages.game.MsgAddPlayer;
 import server.message_system.frontend_messages.game.MsgSendUpdatedPlayer;
+import server.resources.GameResource;
 import server.users.UserSession;
 import server.utils.Context;
 
 public class GameMechanics implements Runnable, Abonent {
    
-   public static final int PLAYERS_NUMBER_IN_GAME = 2;
-   
-   public static final int GAME_TIME_IN_SECONDS = 2;
+//   public static final int PLAYERS_NUMBER_IN_GAME = 2;
+//   
+//   public static final int GAME_TIME_IN_SECONDS = 2;
    
    private final MessageSystem messageSystem;
    
    private final Address address;
+   
+   private final GameResource gameResource;
    
    private Queue <UserSession> waitingPlayers = new PriorityQueue<>();
    
@@ -31,12 +34,7 @@ public class GameMechanics implements Runnable, Abonent {
    public GameMechanics(Context context) {
       this.messageSystem = (MessageSystem) context.getImplementation(MessageSystem.class);
       this.address = new Address();
-      this.messageSystem.addService(this);
-   }
-
-   public GameMechanics(MessageSystem messageSystem) {
-      this.messageSystem = messageSystem;
-      this.address = new Address();
+      this.gameResource = (GameResource) context.getImplementation(GameResource.class);
       this.messageSystem.addService(this);
    }
 
@@ -61,17 +59,17 @@ public class GameMechanics implements Runnable, Abonent {
          return;
       }
       waitingPlayers.add(userSession);
-      if (waitingPlayers.size() >= PLAYERS_NUMBER_IN_GAME) 
+      if (waitingPlayers.size() >= gameResource.getPlayersNumber()) 
          createGameSessions();
    }
 
    private void createGameSessions() {
-      while (waitingPlayers.size() >= PLAYERS_NUMBER_IN_GAME) {
+      while (waitingPlayers.size() >= gameResource.getPlayersNumber()) {
          UserSession first = waitingPlayers.poll();
          UserSession second = waitingPlayers.poll();
          exchangeEnemies(first, second);
-         first.setTimeToFinish(GAME_TIME_IN_SECONDS);
-         second.setTimeToFinish(GAME_TIME_IN_SECONDS);
+         first.setTimeToFinish(gameResource.getGameTimeInSec());
+         second.setTimeToFinish(gameResource.getGameTimeInSec());
          GameSession gameSession = new GameSession(first, second);
          playersToGameSession.put(first, gameSession);
          playersToGameSession.put(second, gameSession);

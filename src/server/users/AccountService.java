@@ -1,9 +1,12 @@
 package server.users;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import server.main.ServerSettings;
 import server.message_system.base.Abonent;
 import server.message_system.base.Address;
 import server.message_system.base.MessageSystem;
@@ -15,8 +18,10 @@ public class AccountService implements Runnable, Abonent {
    private static AtomicInteger lastGeneratedUserID = new AtomicInteger();
 
    // TODO here will be DB
-   // TODO make hashmap for cache for often users with soft references
-   private final Map<String, User> userNameToUser = new ConcurrentHashMap<>();
+   // TODO make hashmap cache for often users with soft references
+   private final Map<String, User> userNameToUser = new HashMap<>();
+   
+   private final Set<String> loggedInUsers = new HashSet<>();
    
    private final Address address;
    
@@ -47,14 +52,21 @@ public class AccountService implements Runnable, Abonent {
    }
    
    public User getUser(String userName) {
-      TimeHelper.sleep(TimeHelper.DB_TEST_DELAY_IN_MILLIS );
+      if (loggedInUsers.contains(userName)) 
+         return null;
+      TimeHelper.sleep(ServerSettings.DB_TEST_DELAY_IN_MILLIS );
       User user = userNameToUser.get(userName);
       if (user == null) {
          Integer userID = lastGeneratedUserID.incrementAndGet();
          user = new User(userName, userID);
          userNameToUser.put(userName, user);
       }
+      loggedInUsers.add(userName);
       return user;
+   }
+   
+   public void logout(String userName) {
+      loggedInUsers.remove(userName);
    }
 
    public MessageSystem getMessageSystem() {

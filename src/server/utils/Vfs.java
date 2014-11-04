@@ -37,6 +37,16 @@ public class Vfs {
       return new File(root + relativeFilePath).getAbsolutePath();
    }
    
+   public String getCanonicalPath(String relativeFilePath) {
+      try {
+         return new File(root + relativeFilePath).getCanonicalPath();
+      }
+      catch (IOException e) {
+         e.printStackTrace();
+      }
+      return null;
+   }
+   
    public byte[] getBytes(String relativeFilePath) {
       if (!isExist(relativeFilePath) )
          throw new IllegalArgumentException();
@@ -100,7 +110,7 @@ public class Vfs {
       return text.toString();
    }
    
-   public Iterator<String> dfsIterator(String startDir) {
+   public Iterator<String> dfsWithStartDir(String startDir) {
       return new DfsFileIterator(startDir);
    }
    
@@ -146,7 +156,7 @@ public class Vfs {
       
    }
    
-   public Iterator<String> bfsIterator(String startDir) {
+   public Iterator<String> bfsWoStartDir(String startDir) {
       return new BfsFileIterator(startDir);
    }
    
@@ -156,7 +166,9 @@ public class Vfs {
       
       private BfsFileIterator(String startDir) {
          File start = new File(root + startDir);
-         filesQueue.add(start);
+         for (File child : start.listFiles()) {
+            filesQueue.add(child);
+         }
       }
 
       @Override
@@ -188,23 +200,29 @@ public class Vfs {
       System.out.println(vfs.getAbsolutePath("h.txt") );
       System.out.println(vfs.isExist("h.txt") );
       System.out.println(vfs.isDirectory("h.txt") );
-      byte[] b = vfs.getBytes("h.txt");
-      for (int i = 0; i < b.length; i++)
-         System.out.print( (char) b[i] + " ");
-      System.out.println(vfs.getUtf8Text("h.txt") );
+      if (vfs.isExist("h.txt") && !vfs.isDirectory("h.txt")) {
+         byte[] b = vfs.getBytes("h.txt");
+         for (int i = 0; i < b.length; i++)
+            System.out.print((char) b[i] + " ");
+         System.out.println(vfs.getUtf8Text("h.txt"));
+      }
       
-      vfs = new Vfs("D:\\www\\selenium-2.42.2");
-      Iterator<String> dfsIterator = vfs.dfsIterator("");
+      vfs = new Vfs("data");
+      Iterator<String> dfsIterator = vfs.dfsWithStartDir("");
       System.out.println("DFS: ");
       while (dfsIterator.hasNext() ) {
          System.out.println(dfsIterator.next() );
       }
       
-      Iterator<String> bfsIterator = vfs.bfsIterator("");
+      Iterator<String> bfsIterator = vfs.bfsWoStartDir("");
       System.out.println("BFS: ");
       while (bfsIterator.hasNext() ) {
          System.out.println(bfsIterator.next() );
       }
+      
+      vfs = new Vfs("");
+      System.out.println(vfs.getAbsolutePath("../data"));
+      System.out.println(vfs.getCanonicalPath("../data"));
 
    }
 

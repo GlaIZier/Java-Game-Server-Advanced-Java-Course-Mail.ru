@@ -12,40 +12,32 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import server.game.GameMechanics;
+import server.message_system.account_messages.MsgLogoutUser;
 import server.message_system.base.Abonent;
 import server.message_system.base.Address;
 import server.message_system.base.MessageSystem;
 import server.message_system.game_mechanics_messages.MsgAddClicksTo;
+import server.resources.FrontendResource;
+import server.users.AccountService;
 import server.users.UserSession;
 import server.utils.Context;
 
 public class Game extends HttpServlet implements Runnable, Abonent {
 
-   public static final String PATH = "/game";
-   
    private static final long serialVersionUID = 1204679657775275767L;
-   
-   private static final String TEMPLATE = "game.tpl";
-   
-   private static final String CLICKS_PARAM = "clicks";
-   
-   private static final String LOADING_MSG = "Loading...";
-   
+
    private final MessageSystem messageSystem;
    
    private final Address address;
+   
+   private final FrontendResource frontendResource;
    
    private Map<HttpSession, UserSession> sessionToPlayers = new ConcurrentHashMap<>();
    
    public Game(Context context) {
       this.messageSystem = (MessageSystem) context.getImplementation(MessageSystem.class);
       this.address = new Address();
-      this.messageSystem.addService(this);
-   }
-   
-   public Game(MessageSystem messageSystem) {
-      this.messageSystem = messageSystem;
-      this.address = new Address();
+      this.frontendResource = (FrontendResource) context.getImplementation(FrontendResource.class);
       this.messageSystem.addService(this);
    }
 
@@ -92,7 +84,7 @@ public class Game extends HttpServlet implements Runnable, Abonent {
          System.out.println("Unknown or no session in POST request to Game!");
          response.sendRedirect("");
       }
-      String clicks = request.getParameter(CLICKS_PARAM);
+      String clicks = request.getParameter(frontendResource.getGameClicksParam());
       UserSession player = sessionToPlayers.get(session);
       if (clicks != null) {
          messageSystem.sendMessage(new MsgAddClicksTo(address, messageSystem.getAddressService()
@@ -105,7 +97,7 @@ public class Game extends HttpServlet implements Runnable, Abonent {
          }
          else {
             // Send to msg to frontend to wait results 
-            response.getWriter().print(createJson(LOADING_MSG, LOADING_MSG));
+            response.getWriter().print(createJson(frontendResource.getGameLoadingMsg(), frontendResource.getGameLoadingMsg()));
          }
       }
    }  
@@ -123,6 +115,8 @@ public class Game extends HttpServlet implements Runnable, Abonent {
    private void finishGame(HttpServletResponse response, UserSession player) throws IOException {
       response.getWriter().print(createJson(player.getGameResultMsg(), 
             Integer.toString(player.getClickedByEnemy() ) ) );
+      messageSystem.sendMessage(new MsgLogoutUser(address, messageSystem.getAddressService()
+            .getAddress(AccountService.class), player.getMe().getName())); 
       deletePlayer(player);
       HttpSession playerSession = player.getSession();
       playerSession.invalidate();
@@ -157,7 +151,7 @@ public class Game extends HttpServlet implements Runnable, Abonent {
       gamePageVars.put("userName", userSession.getMe().getName() );
       gamePageVars.put("enemyName", userSession.getEnemy().getName() );
       gamePageVars.put("gameTime", userSession.getTimeToFinish() );
-      return PageGenerator.getPage(TEMPLATE, gamePageVars);
+      return PageGenerator.getPage(frontendResource.getTemplatesDir(), frontendResource.getGameTemplate(), gamePageVars);
    }
    
    public MessageSystem getMessageSystem() {

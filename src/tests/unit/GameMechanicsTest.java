@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.AbstractMap;
 import java.util.Queue;
 
 import javax.servlet.http.HttpSession;
@@ -17,17 +18,19 @@ import server.game.GameMechanics;
 import server.message_system.base.MessageSystem;
 import server.users.User;
 import server.users.UserSession;
+import server.utils.Context;
 
 public class GameMechanicsTest {
 
    private GameMechanics gm;
 
-   private MessageSystem ms;
+   private Context context;
 
    @Before
    public void setUp() throws Exception {
-      ms = MessageSystem.getInstance();
-      gm = new GameMechanics(ms);
+      context = new Context(new AbstractMap.SimpleEntry<Class<?>, Object>(
+            MessageSystem.class, MessageSystem.getInstance()));
+      gm = new GameMechanics(context);
    }
 
    @Test
@@ -51,7 +54,7 @@ public class GameMechanicsTest {
    // add Mockito to test this method. Too hard to test
    @Test 
    public void testAddPlayerClicks() {
-      new Game(ms); // need new Game because we send msgs while creating game sessions and finishing games;
+      new Game(context); // need new Game because we send msgs while creating game sessions and finishing games;
       
       HttpSession session1 = Mockito.mock(HttpSession.class);
       Mockito.when(session1.getId()).thenReturn("id1");

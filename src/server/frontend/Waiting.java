@@ -12,38 +12,32 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import server.game.GameMechanics;
+import server.main.ServerSettings;
 import server.message_system.base.Abonent;
 import server.message_system.base.Address;
 import server.message_system.base.MessageSystem;
 import server.message_system.game_mechanics_messages.MsgAddWaitingPlayer;
+import server.resources.FrontendResource;
 import server.users.User;
 import server.users.UserSession;
 import server.utils.Context;
-import server.utils.TimeHelper;
 
 public class Waiting extends HttpServlet implements Runnable, Abonent {
    
-   public static final String PATH = "/waiting";
-   
    private static final long serialVersionUID = 6011218407952120472L;
-   
-   private static final String TEMPLATE = "waiting_for_another_player.tpl";
    
    private final MessageSystem messageSystem;
    
    private final Address address;
+   
+   private final FrontendResource frontendResource;
 
    private Map<HttpSession, UserSession> waitingUsers = new ConcurrentHashMap<>();
 
    public Waiting(Context context) {
       this.messageSystem = (MessageSystem) context.getImplementation(MessageSystem.class);
       this.address = new Address();
-      this.messageSystem.addService(this);
-   }
-
-   public Waiting(MessageSystem messageSystem) {
-      this.messageSystem = messageSystem;
-      this.address = new Address();
+      this.frontendResource = (FrontendResource) context.getImplementation(FrontendResource.class);
       this.messageSystem.addService(this);
    }
 
@@ -92,7 +86,7 @@ public class Waiting extends HttpServlet implements Runnable, Abonent {
       }
       else {
          response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
-         response.getWriter().print(Game.PATH);
+         response.getWriter().print(frontendResource.getGamePath());
       }
    }  
    
@@ -122,9 +116,9 @@ public class Waiting extends HttpServlet implements Runnable, Abonent {
       userVar.put("id", Integer.toString(userSession.getMe().getId() ) );
       pageVars.put("user", userVar);
       pageVars.put("sessionId", session.getId() );
-      pageVars.put("path", PATH);
-      pageVars.put("ajaxInterval", Integer.toString(TimeHelper.FRONTEND_TICK_IN_MILLIS) );
-      return PageGenerator.getPage(TEMPLATE, pageVars);
+      pageVars.put("path", frontendResource.getWaitingPath());
+      pageVars.put("ajaxInterval", Integer.toString(ServerSettings.FRONTEND_TICK_IN_MILLIS) );
+      return PageGenerator.getPage(frontendResource.getTemplatesDir(), frontendResource.getWaitingTemplate(), pageVars);
    }
    
    public MessageSystem getMessageSystem() {

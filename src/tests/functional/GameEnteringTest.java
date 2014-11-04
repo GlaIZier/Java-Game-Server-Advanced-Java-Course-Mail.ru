@@ -12,7 +12,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.sun.istack.internal.NotNull;
 
-import server.main.Main;
+import server.main.ServerSettings;
+import server.main.ServerStarter;
 
 public class GameEnteringTest {
 
@@ -24,8 +25,8 @@ public class GameEnteringTest {
    
    @Before
    public void setUp() {
-      String[] params = {Main.START_WITHOUT_JOIN_ARG};
-      Main.main(params);
+      String[] params = {ServerSettings.START_WITHOUT_JOIN_ARG};
+      ServerStarter.main(params);
    }
    
    @Test
@@ -55,8 +56,8 @@ public class GameEnteringTest {
    
    @AfterClass
    public static void cleanUp() {
-      Main.stopServer();
-      Main.joinServer();
+      ServerStarter.stopServer();
+      ServerStarter.joinServer();
    }
    
 }

@@ -12,7 +12,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 
-import server.main.Main;
+import server.main.ServerSettings;
+import server.main.ServerStarter;
 
 public class GameEnteringLoadTest implements Runnable{
    
@@ -34,8 +35,8 @@ public class GameEnteringLoadTest implements Runnable{
    public void setUp() {
       lastEnteredUser = new AtomicInteger();
       new Thread(new GameEnteringLoadTest()).start();
-      String[] params = {Main.START_WITHOUT_JOIN_ARG};
-      Main.main(params);
+      String[] params = {ServerSettings.START_WITHOUT_JOIN_ARG};
+      ServerStarter.main(params);
    }
    
    @Test
@@ -124,8 +125,8 @@ public class GameEnteringLoadTest implements Runnable{
    public static void cleanUp() {
       System.out.println("Final max mem: " + Runtime.getRuntime().maxMemory() );
       System.out.println("Final free mem: " + Runtime.getRuntime().freeMemory() );
-      Main.stopServer();
-      Main.joinServer();
+      ServerStarter.stopServer();
+      ServerStarter.joinServer();
    }
 
    // shows 

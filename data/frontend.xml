@@ -1,0 +1,15 @@
+<class type="server.resources.FrontendResource">
+   <logonPath>/logon</logonPath>
+   <logonTemplate>wait_auth.tpl</logonTemplate>
+   <logonLoginParam>login</logonLoginParam>
+   
+   <waitingPath>/waiting</waitingPath>
+   <waitingTemplate>waiting_for_another_player.tpl</waitingTemplate>
+   
+   <gamePath>/game</gamePath>
+   <gameTemplate>game.tpl</gameTemplate>
+   <gameClicksParam>clicks</gameClicksParam>
+   <gameLoadingMsg>Loading...</gameLoadingMsg>
+   
+   <templatesDir>templates</templatesDir>
+</class>

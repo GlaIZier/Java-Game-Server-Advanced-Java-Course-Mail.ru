@@ -17,6 +17,10 @@ public class Context {
                this.context.put(sToI.getKey(), sToI.getValue());
       }
    }
+   
+   public Context(Map<Class<?>, Object> servicesToImpl) {
+      this.context = servicesToImpl;
+   }
 
    public Object getImplementation(Class<?> clazz) {
       return context.get(clazz);
