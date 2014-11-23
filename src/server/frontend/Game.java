@@ -11,14 +11,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import server.db.DatabaseService;
 import server.game.GameMechanics;
-import server.message_system.account_messages.MsgLogoutUser;
 import server.message_system.base.Abonent;
 import server.message_system.base.Address;
 import server.message_system.base.MessageSystem;
+import server.message_system.db_messages.MsgLogoutUser;
 import server.message_system.game_mechanics_messages.MsgAddClicksTo;
 import server.resources.FrontendResource;
-import server.users.AccountService;
 import server.users.UserSession;
 import server.utils.Context;
 
@@ -116,7 +116,7 @@ public class Game extends HttpServlet implements Runnable, Abonent {
       response.getWriter().print(createJson(player.getGameResultMsg(), 
             Integer.toString(player.getClickedByEnemy() ) ) );
       messageSystem.sendMessage(new MsgLogoutUser(address, messageSystem.getAddressService()
-            .getAddress(AccountService.class), player.getMe().getName())); 
+            .getAddress(DatabaseService.class), player.getMe().getName())); 
       deletePlayer(player);
       HttpSession playerSession = player.getSession();
       playerSession.invalidate();

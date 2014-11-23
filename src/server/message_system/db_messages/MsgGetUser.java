@@ -1,17 +1,17 @@
-package server.message_system.account_messages;
+package server.message_system.db_messages;
 
 import javax.servlet.http.HttpSession;
 
+import server.db.DatabaseService;
 import server.frontend.Logon;
 import server.frontend.Waiting;
 import server.message_system.base.Address;
 import server.message_system.frontend_messages.logon.MsgUnauthenticated;
 import server.message_system.frontend_messages.waiting.MsgAddWaitingUser;
-import server.users.AccountService;
 import server.users.User;
 // import users.Session;
 
-public class MsgGetUser extends MsgToAccountService{
+public class MsgGetUser extends MsgToDatabaseService{
    
    private final HttpSession session;
    
@@ -24,13 +24,13 @@ public class MsgGetUser extends MsgToAccountService{
    }
 
    @Override
-   public void exec(AccountService accountService) {
-      User user = accountService.getUser(userName);
+   public void exec(DatabaseService databaseService) {
+      User user = databaseService.getUser(userName);
       if (user != null) 
-         accountService.getMessageSystem().sendMessage(new MsgAddWaitingUser(getTo(), accountService.
+         databaseService.getMessageSystem().sendMessage(new MsgAddWaitingUser(getTo(), databaseService.
                getMessageSystem().getAddressService().getAddress(Waiting.class), session, user));
       else 
-         accountService.getMessageSystem().sendMessage(new MsgUnauthenticated(getTo(), accountService.
+         databaseService.getMessageSystem().sendMessage(new MsgUnauthenticated(getTo(), databaseService.
             getMessageSystem().getAddressService().getAddress(Logon.class), session));
    }
 

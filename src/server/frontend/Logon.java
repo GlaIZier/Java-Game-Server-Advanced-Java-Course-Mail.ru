@@ -15,13 +15,13 @@ import javax.servlet.http.HttpSession;
 
 import org.eclipse.jetty.util.ConcurrentHashSet;
 
+import server.db.DatabaseService;
 import server.main.ServerSettings;
-import server.message_system.account_messages.MsgGetUser;
 import server.message_system.base.Abonent;
 import server.message_system.base.Address;
 import server.message_system.base.MessageSystem;
+import server.message_system.db_messages.MsgGetUser;
 import server.resources.FrontendResource;
-import server.users.AccountService;
 import server.utils.Context;
 
 public class Logon extends HttpServlet implements Runnable, Abonent {
@@ -90,7 +90,7 @@ public class Logon extends HttpServlet implements Runnable, Abonent {
          // first time we get sessionID and userName
          userSessionsInCreation.add(session);
          messageSystem.sendMessage(new MsgGetUser(address, messageSystem.getAddressService()
-               .getAddress(AccountService.class), session, userName));
+               .getAddress(DatabaseService.class), session, userName));
       }
       // if userSession creation is in process... then return wait page
       if (userSessionsInCreation.contains(session)) {

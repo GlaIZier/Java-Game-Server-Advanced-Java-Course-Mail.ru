@@ -12,6 +12,12 @@ public class AddressService {
    }
 
    public void setAddress(Abonent abonent) {
+      for (Class<?> interfaze : abonent.getClass().getInterfaces()) {
+         if (interfaze != Runnable.class && interfaze != Abonent.class) { 
+            addresses.put(interfaze, abonent.getAddress());
+            return;
+         }
+      }
       addresses.put(abonent.getClass(), abonent.getAddress());
    }
 }

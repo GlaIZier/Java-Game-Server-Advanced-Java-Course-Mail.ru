@@ -1,4 +1,4 @@
-package server.users;
+package server.db.mock;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -6,19 +6,23 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import server.db.DatabaseService;
 import server.main.ServerSettings;
-import server.message_system.base.Abonent;
 import server.message_system.base.Address;
 import server.message_system.base.MessageSystem;
+import server.users.User;
 import server.utils.Context;
 import server.utils.TimeHelper;
 
-public class AccountService implements Runnable, Abonent {
+/**
+ * Class for emulation db work.
+ * @author Mike
+ *
+ */
+public class AccountService implements DatabaseService {
    
    private static AtomicInteger lastGeneratedUserID = new AtomicInteger();
 
-   // TODO here will be DB
-   // TODO make hashmap cache for often users with soft references
    private final Map<String, User> userNameToUser = new HashMap<>();
    
    private final Set<String> loggedInUsers = new HashSet<>();
@@ -51,6 +55,7 @@ public class AccountService implements Runnable, Abonent {
       }
    }
    
+   @Override
    public User getUser(String userName) {
       if (loggedInUsers.contains(userName)) 
          return null;
@@ -65,6 +70,7 @@ public class AccountService implements Runnable, Abonent {
       return user;
    }
    
+   @Override
    public void logout(String userName) {
       loggedInUsers.remove(userName);
    }

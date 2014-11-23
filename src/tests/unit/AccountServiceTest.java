@@ -5,8 +5,8 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import server.db.mock.AccountService;
 import server.message_system.base.MessageSystem;
-import server.users.AccountService;
 import server.users.User;
 
 public class AccountServiceTest {

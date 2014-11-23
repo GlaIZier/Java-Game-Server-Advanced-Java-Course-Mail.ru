@@ -1,9 +1,9 @@
-package server.message_system.account_messages;
+package server.message_system.db_messages;
 
+import server.db.DatabaseService;
 import server.message_system.base.Address;
-import server.users.AccountService;
 
-public class MsgLogoutUser extends MsgToAccountService{
+public class MsgLogoutUser extends MsgToDatabaseService{
 
    private final String userName;
    
@@ -13,8 +13,8 @@ public class MsgLogoutUser extends MsgToAccountService{
    }
 
    @Override
-   public void exec(AccountService accountService) {
-      accountService.logout(userName);
+   public void exec(DatabaseService databaseService) {
+      databaseService.logout(userName);
    }
 
 }
