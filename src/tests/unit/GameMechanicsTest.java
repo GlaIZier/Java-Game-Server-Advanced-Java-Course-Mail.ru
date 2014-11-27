@@ -4,7 +4,9 @@ import static org.junit.Assert.*;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.AbstractMap;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Queue;
 
 import javax.servlet.http.HttpSession;
@@ -15,10 +17,13 @@ import org.mockito.Mockito;
 
 import server.frontend.Game;
 import server.game.GameMechanics;
+import server.main.ServerSettings;
 import server.message_system.base.MessageSystem;
 import server.users.User;
 import server.users.UserSession;
 import server.utils.Context;
+import server.utils.Vfs;
+import server.utils.XmlFileSaxReader;
 
 public class GameMechanicsTest {
 
@@ -28,12 +33,27 @@ public class GameMechanicsTest {
 
    @Before
    public void setUp() throws Exception {
-      context = new Context(new AbstractMap.SimpleEntry<Class<?>, Object>(
-            MessageSystem.class, MessageSystem.getInstance()));
+      // prev before resources have been added
+      //context = new Context(new AbstractMap.SimpleEntry<Class<?>, Object>(MessageSystem.class, MessageSystem.getInstance()));
+      
+      Map<Class<?>, Object> servicesToImpl = new HashMap<>();
+      // put MsgSystem
+      servicesToImpl.put(MessageSystem.class, MessageSystem.getInstance());
+      
+      // put all resources
+      Vfs vfs = new Vfs(ServerSettings.DATA_FOLDER);
+      Iterator<String> resourceIterator = vfs.bfsWoStartDir("");
+      while (resourceIterator.hasNext()) {
+         XmlFileSaxReader fileReader = new XmlFileSaxReader(resourceIterator.next());
+         servicesToImpl.put(fileReader.getInstanceClass(), fileReader.getInstance());
+      }
+      
+      context = new Context(servicesToImpl);
       gm = new GameMechanics(context);
    }
 
    @Test
+   @SuppressWarnings("unchecked")
    public void testAddWaitingPlayer() {
       UserSession userSession = new UserSession(null, new User("test", 1) );
       gm.addWaitingPlayer(userSession);   

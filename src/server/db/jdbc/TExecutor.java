@@ -53,22 +53,22 @@ public class TExecutor {
          e.printStackTrace();
          try {
             connection.rollback();
-            connection.setAutoCommit(true);
          }
          catch (SQLException rollbackE) {
             rollbackE.printStackTrace();
          }
       }
       finally {
-         if (statement != null)
-            try {
+         try {
+            connection.setAutoCommit(true);
+            if (statement != null)
                statement.close();
-            }
-            catch (SQLException e) {
-               System.out.println("Statement hasn't been closed!");
-               e.printStackTrace();
-               resultOk = false;
-            }
+         }
+         catch (SQLException e) {
+            System.out.println("Statement hasn't been closed!");
+            e.printStackTrace();
+            resultOk = false;
+         }
       }
       return resultOk;
    }
@@ -92,22 +92,22 @@ public class TExecutor {
          e.printStackTrace();
          try {
             connection.rollback();
-            connection.setAutoCommit(true);
          }
          catch (SQLException rollbackE) {
             rollbackE.printStackTrace();
          }
       }
       finally {
-         if (statement != null)
-            try {
+         try {
+            connection.setAutoCommit(true);
+            if (statement != null)
                statement.close();
-            }
-            catch (SQLException e) {
-               System.out.println("Statement hasn't been closed!");
-               e.printStackTrace();
-               resultOk = false;
-            }
+         }
+         catch (SQLException e) {
+            System.out.println("Statement hasn't been closed!");
+            e.printStackTrace();
+            resultOk = false;
+         }
       }
       return resultOk;
    }
@@ -130,22 +130,22 @@ public class TExecutor {
          e.printStackTrace();
          try {
             connection.rollback();
-            connection.setAutoCommit(true);
          }
          catch (SQLException rollbackE) {
             rollbackE.printStackTrace();
          }
       }
       finally {
-         if (statement != null)
-            try {
+         try {
+            connection.setAutoCommit(true);
+            if (statement != null)
                statement.close();
-            }
-            catch (SQLException e) {
-               System.out.println("Statement hasn't been closed!");
-               e.printStackTrace();
-               resultOk = false;
-            }
+         }
+         catch (SQLException e) {
+            System.out.println("Statement hasn't been closed!");
+            e.printStackTrace();
+            resultOk = false;
+         }
       }
       return resultOk;
    }

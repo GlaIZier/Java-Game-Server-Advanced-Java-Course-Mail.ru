@@ -57,8 +57,12 @@ public class AccountService implements DatabaseService {
    
    @Override
    public User getUser(String userName) {
+      if (userName == null || userName.equals("")) 
+         throw new IllegalArgumentException();
+      
       if (loggedInUsers.contains(userName)) 
          return null;
+      
       TimeHelper.sleep(ServerSettings.DB_TEST_DELAY_IN_MILLIS );
       User user = userNameToUser.get(userName);
       if (user == null) {
@@ -67,11 +71,18 @@ public class AccountService implements DatabaseService {
          userNameToUser.put(userName, user);
       }
       loggedInUsers.add(userName);
+      
       return user;
    }
    
    @Override
    public void logout(String userName) {
+      if (userName == null || userName.equals("")) 
+         throw new IllegalArgumentException();
+      
+      if (!loggedInUsers.contains(userName))
+         throw new IllegalStateException();
+      
       loggedInUsers.remove(userName);
    }
 

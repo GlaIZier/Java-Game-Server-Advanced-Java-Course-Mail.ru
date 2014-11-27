@@ -4,7 +4,7 @@ public final class ServerSettings {
 
 	public static final String START_WITHOUT_JOIN_ARG = "join_server=false";
 
-	public static final int PORT = 8083;
+	public static final int PORT = 8081;
 
 	public static final int FRONTEND_TICK_IN_MILLIS = 1000;
 
@@ -24,7 +24,6 @@ public final class ServerSettings {
 	
 	public static final String DB_PASSWORD = "password";
 
-	private ServerSettings() {
-	}
+	private ServerSettings() {}
 
 }

@@ -12,14 +12,18 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 
 import server.db.DatabaseService;
+import server.db.hibernate.HibernateDatabaseService;
 import server.db.jdbc.JdbcDatabaseService;
 import server.db.mock.AccountService;
+
 import server.frontend.Game;
 import server.frontend.Waiting;
 import server.frontend.Logon;
+
 import server.game.GameMechanics;
 import server.message_system.base.MessageSystem;
 import server.resources.FrontendResource;
+
 import server.utils.Context;
 import server.utils.Vfs;
 import server.utils.XmlFileSaxReader;
@@ -41,7 +45,7 @@ public class ServerStarter {
       Game game = new Game(context);
       Thread gameThread = new Thread(game);
 
-      DatabaseService databaseService = new AccountService(context);
+      DatabaseService databaseService = new HibernateDatabaseService(context);
       Thread accountServiceThread = new Thread(databaseService);
 
       GameMechanics gameMechanics = new GameMechanics(context);
@@ -74,6 +78,7 @@ public class ServerStarter {
    
    private static Context createContext() {
       Map<Class<?>, Object> servicesToImpl = new HashMap<>();
+      
       // put MsgSystem
       servicesToImpl.put(MessageSystem.class, MessageSystem.getInstance());
 //      Context context = new Context(new AbstractMap.SimpleEntry<Class<?>, Object>(

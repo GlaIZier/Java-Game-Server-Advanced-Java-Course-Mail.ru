@@ -13,11 +13,14 @@ public class UsersDao {
       this.connection = connection;
    }
   
-   public boolean recreateUsersTable() {
-      String dropQuery = "drop table if exists users";
-      TExecutor.execUpdate(connection, dropQuery);
+   public boolean createUsersTable() {
       String createQuery = "create table users (id bigint auto_increment, name varchar(255), primary key (id))";
       return TExecutor.execUpdate(connection, createQuery);
+   }
+   
+   public boolean dropUsersTable() {
+      String dropQuery = "drop table if exists users";
+      return TExecutor.execUpdate(connection, dropQuery);
    }
    
    public boolean addUsers(Set<String> userNames) {
@@ -25,15 +28,20 @@ public class UsersDao {
       return TExecutor.execUpdate(connection, query, userNames);
    }
    
+   public boolean addUser(String userName) {
+      String query = "insert into users (name) values ('" + userName + "')";
+      return TExecutor.execUpdate(connection, query);
+   }
+   
    public UsersDataSet getUsersDataSet(String userName) {
-      String query = "select * from users where name=" + userName;
+      String query = "select * from users where name='" + userName + "'";
       
       UsersDataSet usersDataSet = TExecutor.execQuery(connection, query, new TResultHandler<UsersDataSet>() {
          
          public UsersDataSet handle(ResultSet resultSet) {
             try {
-               resultSet.first();
-               return new UsersDataSet(resultSet.getInt(1), resultSet.getString(2));
+               if (resultSet.next())
+                  return new UsersDataSet(resultSet.getInt(1), resultSet.getString(2));
             }
             catch (SQLException e) {
                e.printStackTrace();
