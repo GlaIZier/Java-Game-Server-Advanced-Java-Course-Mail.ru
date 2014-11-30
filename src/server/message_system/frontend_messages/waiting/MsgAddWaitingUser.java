@@ -22,7 +22,7 @@ public class MsgAddWaitingUser extends MsgToWaiting {
 
    @Override
    public void exec(Waiting waiting) {
-      waiting.addWaitingUser(session, user);
+      waiting.createUserSessionAndAddToWaiting(session, user);
       // send message to logon to redirect to waiting
       waiting.getMessageSystem().sendMessage(new MsgUserSessionWasCreated(getTo(), 
             waiting.getMessageSystem().getAddressService().getAddress(Logon.class), session) );

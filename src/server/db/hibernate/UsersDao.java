@@ -25,20 +25,49 @@ public class UsersDao {
    }
    
    @SuppressWarnings("unchecked")
+   public void updateWins(String userName, int wins) {
+      Session session = sessionFactory.openSession();
+      Criteria criteria = session.createCriteria(UsersDataSet.class);
+      List<UsersDataSet> udsList = criteria.add(Restrictions.eq("name", userName)).list();
+      
+      if (udsList.isEmpty()) {
+         System.out.println("Can't find user name " + userName + " in database to update wins!");
+         session.close();
+         return;
+      }
+      UsersDataSet uds = udsList.get(0);
+      
+      Transaction transaction = session.beginTransaction();
+      uds.setWins(wins);
+      transaction.commit();
+      session.close();
+   }
+   
+   @SuppressWarnings("unchecked")
    public UsersDataSet read(String userName) {
       Session session = sessionFactory.openSession();
       Criteria criteria = session.createCriteria(UsersDataSet.class);
       List<UsersDataSet> udsList = criteria.add(Restrictions.eq("name", userName)).list();
-      if (udsList.isEmpty()) 
-         return null;
-      else 
-         return udsList.get(0);
+      try {
+         if (udsList.isEmpty()) 
+            return null;
+         else 
+            return udsList.get(0);
+      }
+      finally {
+         session.close();
+      }
    }
    
    public UsersDataSet read(int id) {
       Session session = sessionFactory.openSession();
       UsersDataSet uds = (UsersDataSet) session.get(UsersDataSet.class, id);
-      return uds;
+      try {
+         return uds;
+      }
+      finally {
+         session.close();
+      }
    }
 
 }

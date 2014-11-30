@@ -5,10 +5,12 @@ import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
+import server.db.DatabaseService;
 import server.frontend.Game;
 import server.message_system.base.Abonent;
 import server.message_system.base.Address;
 import server.message_system.base.MessageSystem;
+import server.message_system.db_messages.MsgAddWins;
 import server.message_system.frontend_messages.game.MsgAddPlayer;
 import server.message_system.frontend_messages.game.MsgSendUpdatedPlayer;
 import server.resources.GameResource;
@@ -119,10 +121,14 @@ public class GameMechanics implements Runnable, Abonent {
       if (player1.getClickedByMe() > player2.getClickedByMe() ) {
          player1.setGameResult(GameResult.WIN);
          player2.setGameResult(GameResult.LOSS);
+         messageSystem.sendMessage(new MsgAddWins(address, 
+               messageSystem.getAddressService().getAddress(DatabaseService.class), player1.getMe().getName(), 1) );
       }
       else if (player1.getClickedByMe() < player2.getClickedByMe() ) {
          player2.setGameResult(GameResult.WIN);
          player1.setGameResult(GameResult.LOSS);
+         messageSystem.sendMessage(new MsgAddWins(address, 
+               messageSystem.getAddressService().getAddress(DatabaseService.class), player2.getMe().getName(), 1) );
       }
       else {
          player1.setGameResult(GameResult.DRAW);

@@ -1,0 +1,15 @@
+https://github.com/vitaly-chibrikov/tp_java_2013_02/tree/master/lecture2/src/main
+
+http://stackoverflow.com/questions/18010150/embedding-jetty-9-where-is-jetty-all-jar
+http://stackoverflow.com/questions/1865502/what-jetty-jar-should-i-use
+
+http://wiki.eclipse.org/Jetty/Tutorial/Embedding_Jetty
+http://ben-bai.blogspot.ru/2012/10/use-embedded-jetty-to-create-executable.html
+http://stackoverflow.com/questions/10749385/using-embedded-jetty-to-create-a-web-interface
+http://atechblogagain.wordpress.com/2012/12/15/jetty-embedded-serving-jsp/
+http://atechblogagain.wordpress.com/2013/06/06/a-web-server-embedded-in-your-java-application-with-jetty/
+http://www.codeproject.com/Articles/128145/Run-Jetty-Web-Server-Within-Your-Application
+
+http://www.techques.com/question/1-8593496/embedded-jetty-forward-from-servlet-to-jsp
+https://github.com/jetty-project/embedded-jetty-jsp/blob/master/src/main/java/org/eclipse/jetty/demo/Main.java
+www.rsdn.ru/forum/java/3204637.all

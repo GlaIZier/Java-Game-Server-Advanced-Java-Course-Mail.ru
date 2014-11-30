@@ -113,7 +113,7 @@ public class JdbcDatabaseService implements DatabaseService {
 	   UsersDao usersDao = new UsersDao(connection);
 	   usersDao.dropUsersTable();
 	   usersDao.createUsersTable();
-	   usersDao.addUsers(INIT_REGISTERED_USERS);
+	   usersDao.addNewUsers(INIT_REGISTERED_USERS);
 	}
 
 	@Override
@@ -147,12 +147,12 @@ public class JdbcDatabaseService implements DatabaseService {
       UsersDataSet usersDataSet = usersDao.getUsersDataSet(userName);
       if (usersDataSet == null) {
          // register new user
-         usersDao.addUser(userName);
+         usersDao.addUser(userName, 0);
          usersDataSet = usersDao.getUsersDataSet(userName);
       }
       
       loggedInUsers.add(usersDataSet.getName());
-      User user = new User(usersDataSet.getName(), usersDataSet.getId());
+      User user = new User(usersDataSet.getName(), usersDataSet.getId(), usersDataSet.getWins());
       if (strongCache == null) {
          strongCache = new HashMap<>();
          strongCache.put(user.getName(), user);
@@ -173,6 +173,31 @@ public class JdbcDatabaseService implements DatabaseService {
          throw new IllegalStateException();
       
       loggedInUsers.remove(userName);
+   }
+   
+   @Override
+   public void addWins(String userName, int wins) {
+      if (userName == null || userName.equals(""))
+         throw new IllegalArgumentException();
+      
+      if (wins <= 0) {
+         System.out.println("Trying to add incorrect number of wins " + wins + " for user " + userName);
+         return;
+        }
+      
+      UsersDao usersDao = new UsersDao(connection);
+      UsersDataSet usersDataSet = usersDao.getUsersDataSet(userName);
+      if (usersDataSet == null) {
+         System.out.println("Unknown user name: " + userName + " while trying to add userName");
+         return;
+      }
+      
+      usersDao.updateWins(userName, usersDataSet.getWins() + wins);
+      
+      Map<String, User> strongCache = cache.get();
+      if (strongCache != null) 
+         strongCache.get(userName).addWins(wins);
+      
    }
 
    @Override

@@ -7,7 +7,7 @@
 </head>
 <body>
    <h1 id='head'>
-      Hello, ${user.name}, with userId = <span id='userId'>${user.id}</span>. Your
+      Hello, ${user.name}, with userId = <span id='userId'>${user.id}</span> and number of wins = ${user.wins}. Your
       sessionId is <span id='sessionIdHead'>${sessionId}</span>. Wait for another player.
    </h1>
 </body>

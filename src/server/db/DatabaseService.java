@@ -10,6 +10,8 @@ public interface DatabaseService extends Runnable, Abonent {
    
    public void logout(String userName);
    
+   public void addWins(String userName, int winsNum);
+   
    public MessageSystem getMessageSystem();
 
 }

@@ -13,8 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.eclipse.jetty.util.ConcurrentHashSet;
-
 import server.db.DatabaseService;
 import server.main.ServerSettings;
 import server.message_system.base.Abonent;
@@ -36,7 +34,7 @@ public class Logon extends HttpServlet implements Runnable, Abonent {
 
    private final AtomicInteger handleCount = new AtomicInteger();
 
-   private final Set<HttpSession> userSessionsInCreation = new ConcurrentHashSet<>();
+   private final Set<HttpSession> userSessionsInCreation = new HashSet<>();
    
    private final Set<HttpSession> unauthenticated = new HashSet<>();
 

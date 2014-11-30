@@ -3,7 +3,6 @@ package server.frontend;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -32,7 +31,7 @@ public class Waiting extends HttpServlet implements Runnable, Abonent {
    
    private final FrontendResource frontendResource;
 
-   private Map<HttpSession, UserSession> waitingUsers = new ConcurrentHashMap<>();
+   private Map<HttpSession, UserSession> waitingUsers = new HashMap<>();
 
    public Waiting(Context context) {
       this.messageSystem = (MessageSystem) context.getImplementation(MessageSystem.class);
@@ -90,7 +89,7 @@ public class Waiting extends HttpServlet implements Runnable, Abonent {
       }
    }  
    
-   public void addWaitingUser(HttpSession httpSession, User user) {
+   public void createUserSessionAndAddToWaiting(HttpSession httpSession, User user) {
       if ( httpSession == null || user == null )
          throw new IllegalArgumentException();
       UserSession userSession = new UserSession(httpSession, user);
@@ -114,6 +113,7 @@ public class Waiting extends HttpServlet implements Runnable, Abonent {
       Map<String, Object> userVar = new HashMap<>();
       userVar.put("name", userSession.getMe().getName());
       userVar.put("id", Integer.toString(userSession.getMe().getId() ) );
+      userVar.put("wins", Integer.toString(userSession.getMe().getWins() ) );
       pageVars.put("user", userVar);
       pageVars.put("sessionId", session.getId() );
       pageVars.put("path", frontendResource.getWaitingPath());

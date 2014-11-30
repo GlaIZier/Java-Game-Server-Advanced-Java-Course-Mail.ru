@@ -14,19 +14,24 @@ public class UsersDataSet {
    
    @Column(name = "name")
    private String name;
+   
+   @Column(name = "wins")
+   private int wins;
 
    // need default constructor (without arguments) to hibernate read work
    public UsersDataSet() {}
    
-   public UsersDataSet(int id, String name) {
+   public UsersDataSet(int id, String name, int wins) {
       this.id = id;
       this.name = name;
+      this.wins = wins;
    }
    
    public UsersDataSet(String name) {
       // use -1 when db need to autoincrement it
       this.id = -1;
       this.name = name;
+      this.wins = 0;
    }
    
    public int getId() {
@@ -35,6 +40,18 @@ public class UsersDataSet {
 
    public String getName() {
       return name;
+   }
+   
+   public int getWins() {
+      return wins;
+   }
+   
+   public void setWins(int wins) {
+      if (wins <= 0) {
+         System.out.println("Trying to add incorrect number of wins " + wins + " for user " + name + " with id " + id);
+         return;
+      }
+      this.wins = wins;
    }
 
 }

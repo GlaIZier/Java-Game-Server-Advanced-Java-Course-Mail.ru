@@ -85,7 +85,26 @@ public class AccountService implements DatabaseService {
       
       loggedInUsers.remove(userName);
    }
+   
+   
+   public void addWins(String userName, int wins) {
+      if (userName == null || userName.equals(""))
+         throw new IllegalArgumentException();
+      
+      if (!userNameToUser.containsKey(userName)) {
+         System.out.println("Unknown user name: " + userName + " while trying to add userName");
+         return;
+      }
+      
+      if (wins <= 0) {
+       System.out.println("Trying to add incorrect number of wins " + wins + " for user " + userName);
+       return;
+      }
+      
+      userNameToUser.get(userName).addWins(wins);
+   }
 
+   @Override
    public MessageSystem getMessageSystem() {
       return messageSystem;
    }

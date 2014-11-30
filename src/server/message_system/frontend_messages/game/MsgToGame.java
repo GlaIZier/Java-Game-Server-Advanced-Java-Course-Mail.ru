@@ -14,7 +14,7 @@ public abstract class MsgToGame extends Msg {
    @Override
    public void exec(Abonent abonent) {
       if (abonent instanceof Game) {
-         exec( (Game)abonent);
+         exec((Game) abonent);
       }
       else {
          System.out.println("Wrong class of object in MsgToLogon: " + abonent.getClass().getName() );

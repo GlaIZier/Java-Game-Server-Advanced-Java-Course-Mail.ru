@@ -110,7 +110,7 @@ public class HibernateDatabaseService implements DatabaseService {
       }
       
       loggedInUsers.add(usersDataSet.getName());
-      User user = new User(usersDataSet.getName(), usersDataSet.getId());
+      User user = new User(usersDataSet.getName(), usersDataSet.getId(), usersDataSet.getWins());
       if (strongCache == null) {
          strongCache = new HashMap<>();
          strongCache.put(user.getName(), user);
@@ -132,6 +132,30 @@ public class HibernateDatabaseService implements DatabaseService {
       
       loggedInUsers.remove(userName);
    }
+   
+   @Override
+   public void addWins(String userName, int wins) {
+      if (userName == null || userName.equals(""))
+         throw new IllegalArgumentException();
+      
+      if (wins <= 0) {
+         System.out.println("Trying to add incorrect number of wins " + wins + " for user " + userName);
+         return;
+      }
+      
+      UsersDao usersDao = new UsersDao(sessionFactory);
+      UsersDataSet usersDataSet = usersDao.read(userName);
+      if (usersDataSet == null) {
+         System.out.println("Unknown user name: " + userName + " while trying to add userName");
+         return;
+      }
+      
+      usersDao.updateWins(userName, usersDataSet.getWins() + wins);
+      
+      Map<String, User> strongCache = cache.get();
+      if (strongCache != null) 
+         strongCache.get(userName).addWins(wins);
+   }
 
    @Override
    public MessageSystem getMessageSystem() {
@@ -146,7 +170,7 @@ public class HibernateDatabaseService implements DatabaseService {
       System.out.append(transaction.getLocalStatus().toString() + '\n');
       session.close();
       
-      UsersDataSet uds = new UsersDao(sessionFactory).read(122);
+      UsersDataSet uds = new UsersDao(sessionFactory).read(22);
       System.out.println(uds.getId() + " " + uds.getName());
       
       uds = new UsersDao(sessionFactory).read("q");

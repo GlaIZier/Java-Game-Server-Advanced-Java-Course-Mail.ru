@@ -3,7 +3,6 @@ package server.frontend;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -32,7 +31,7 @@ public class Game extends HttpServlet implements Runnable, Abonent {
    
    private final FrontendResource frontendResource;
    
-   private Map<HttpSession, UserSession> sessionToPlayers = new ConcurrentHashMap<>();
+   private Map<HttpSession, UserSession> sessionToPlayers = new HashMap<>();
    
    public Game(Context context) {
       this.messageSystem = (MessageSystem) context.getImplementation(MessageSystem.class);

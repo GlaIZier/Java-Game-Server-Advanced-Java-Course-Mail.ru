@@ -15,19 +15,17 @@ import server.db.DatabaseService;
 import server.db.hibernate.HibernateDatabaseService;
 import server.db.jdbc.JdbcDatabaseService;
 import server.db.mock.AccountService;
-
 import server.frontend.Game;
 import server.frontend.Waiting;
 import server.frontend.Logon;
-
 import server.game.GameMechanics;
 import server.message_system.base.MessageSystem;
 import server.resources.FrontendResource;
-
 import server.utils.Context;
 import server.utils.Vfs;
 import server.utils.XmlFileSaxReader;
 
+@SuppressWarnings("unused")
 public class ServerStarter {
 
    private static final Server SERVER = new Server(ServerSettings.PORT);
@@ -59,9 +57,12 @@ public class ServerStarter {
 
       ServletContextHandler servletContextHandler = new ServletContextHandler(
             ServletContextHandler.SESSIONS);
-      servletContextHandler.addServlet(new ServletHolder(logon), ((FrontendResource) context.getImplementation(FrontendResource.class)).getLogonPath());
-      servletContextHandler.addServlet(new ServletHolder(waiting), ((FrontendResource) context.getImplementation(FrontendResource.class)).getWaitingPath());
-      servletContextHandler.addServlet(new ServletHolder(game), ((FrontendResource) context.getImplementation(FrontendResource.class)).getGamePath());
+      servletContextHandler.addServlet(new ServletHolder(logon),
+            ((FrontendResource) context.getImplementation(FrontendResource.class)).getLogonPath());
+      servletContextHandler.addServlet(new ServletHolder(waiting),
+            ((FrontendResource) context.getImplementation(FrontendResource.class)).getWaitingPath());
+      servletContextHandler.addServlet(new ServletHolder(game), 
+            ((FrontendResource) context.getImplementation(FrontendResource.class)).getGamePath());
 
       ResourceHandler resourceHandler = new ResourceHandler();
       resourceHandler.setDirectoriesListed(true);
