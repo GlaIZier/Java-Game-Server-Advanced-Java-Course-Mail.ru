@@ -43,7 +43,7 @@ public class ServerStarter {
       Game game = new Game(context);
       Thread gameThread = new Thread(game);
 
-      DatabaseService databaseService = new HibernateDatabaseService(context);
+      DatabaseService databaseService = new HibernateDatabaseService(context); // new AccountService(context); new JdbcDatabaseService(context);
       Thread accountServiceThread = new Thread(databaseService);
 
       GameMechanics gameMechanics = new GameMechanics(context);
