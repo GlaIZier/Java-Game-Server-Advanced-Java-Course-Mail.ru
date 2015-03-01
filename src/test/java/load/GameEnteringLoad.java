@@ -1,4 +1,4 @@
-package tests.load;
+package test.java.load;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +15,7 @@ import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import server.main.ServerSettings;
 import server.main.ServerStarter;
 
-public class GameEnteringLoadTest implements Runnable{
+public class GameEnteringLoad implements Runnable{
    
    private static final int THREADS_NUMBER = 50;
    
@@ -34,7 +34,7 @@ public class GameEnteringLoadTest implements Runnable{
    @Before
    public void setUp() {
       lastEnteredUser = new AtomicInteger();
-      new Thread(new GameEnteringLoadTest()).start();
+      new Thread(new GameEnteringLoad()).start();
       String[] params = {ServerSettings.START_WITHOUT_JOIN_ARG};
       ServerStarter.main(params);
    }

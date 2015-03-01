@@ -1,4 +1,4 @@
-package tests.functional;
+package test.java.functional;
 
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -10,8 +10,6 @@ import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.sun.istack.internal.NotNull;
-
 import server.main.ServerSettings;
 import server.main.ServerStarter;
 
@@ -19,7 +17,7 @@ public class GameEnteringTest {
 
    private static final String URL = "http://localhost:8080";
    
-   private static final String USER_NAME = "TestUser";
+   private static final String USER_NAME = "a";
    
    private static final int BD_SEARCH_DELAY_IN_SECONDS = 10;
    
@@ -41,8 +39,7 @@ public class GameEnteringTest {
    
       new WebDriverWait(driver, BD_SEARCH_DELAY_IN_SECONDS).until(new ExpectedCondition<Boolean>() {
          @Override
-         @NotNull
-         public Boolean apply(@NotNull WebDriver d) {
+         public Boolean apply(WebDriver d) {
             WebElement id = d.findElement(By.id("userId"));
             System.out.println("userId = " + id.getText());
             return Integer.parseInt(id.getText() ) != 0 ;
