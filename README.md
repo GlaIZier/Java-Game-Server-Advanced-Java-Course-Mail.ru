@@ -10,5 +10,5 @@ For HibernateDatabaseService or JdbcDatabaseService: MySql service must be start
 
 To play: 
 1. You can build project from sources. Start server using ServerStarter class, run browser except IE, and input by default localhost:8080. Folders data, static and templates with all files must be in the root directory of the project.
-2. You can launch jar file GameServer-1.0-jar-with-dependencies.jar from the folder "target" using command line: java -jar GameServer-1.0-jar-with-dependencies.jar. Folders data, static and templates with all files must be in the same directory as GameServer-1.0-jar-with-dependencies.jar
+2.Use maven to create self-executable jar file. You can launch jar file GameServer-1.0-jar-with-dependencies.jar from the folder "target" using command line: java -jar GameServer-1.0-jar-with-dependencies.jar. Folders data, static and templates with all files must be in the same directory as GameServer-1.0-jar-with-dependencies.jar
 
